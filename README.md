@@ -66,6 +66,7 @@ elmo-hikes/
 
 
 ## Contributors
+- **Matthijs** - BCIT CST Student with a passion for coding and video games. Fun fact: His name is Dutch, but he is 0% Dutch.
 - **Luis** - BCIT CST Student with a passion for videogames, F1, and football *(its football not soccer)*. Fun fact: The moon is not round and it doesn't emit light.
 
 ---
