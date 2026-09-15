@@ -61,8 +61,12 @@ elmo-hikes/
 ---
 
 ## Contributors
+<<<<<<< HEAD
 
 - **Leo** - BCIT CST Student with a passion for computer science and golf. Fun fact: Has had 3 dogs.
+=======
+- **Luis** - BCIT CST Student with a passion for videogames, F1, and football *(its football not soccer)*. Fun fact: The moon is not round and it doesn't emit light.
+>>>>>>> develop
 
 ---
 
