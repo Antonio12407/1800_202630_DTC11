@@ -66,8 +66,8 @@ elmo-hikes/
 
 
 ## Contributors
-- **Your Name** - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
-- **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
+- **Matthijs** - BCIT CST Student with a passion for coding and video games. Fun fact: His name is Dutch, but he is 0% Dutch.
+- **Luis** - BCIT CST Student with a passion for videogames, F1, and football *(its football not soccer)*. Fun fact: The moon is not round and it doesn't emit light.
 
 ---
 
