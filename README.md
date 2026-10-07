@@ -65,7 +65,7 @@ elmo-hikes/
 - **Leo** - BCIT CST Student with a passion for computer science and golf. Fun fact: Has had 3 dogs.
 - **Matthijs** - BCIT CST Student with a passion for coding and video games. Fun fact: His name is Dutch, but he is 0% Dutch.
 - **Luis** - BCIT CST Student with a passion for videogames, F1, and football *(its football not soccer)*. Fun fact: The moon is not round and it doesn't emit light.
-
+- **Kevin** - BCIT CST Student with a passion for games developer. Fun fact: Love basketball, billard, video games.
 ---
 
 ## Acknowledgments
