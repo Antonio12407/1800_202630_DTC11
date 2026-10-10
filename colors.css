@@ -1,0 +1,34 @@
+body {
+    background-color: #FAF5EE;
+    color: #3E2415;
+}
+
+.navbar.bg-secondary-subtle {
+    background-color: #E9DCCB !important;
+}
+
+.navbar .text-dark,
+.navbar .navbar-brand {
+    color: #6B4226 !important;
+}
+
+p.fs-5 {
+    color: #6B4226 !important;
+}
+
+h1.text-body-emphasis {
+    color: #6B4226 !important;
+}
+
+/* change color variable */
+.btn.btn-outline-success {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #3E2415;
+    --bs-btn-border-color: #3E2415;
+    --bs-btn-hover-color: #3E2415;
+    --bs-btn-hover-bg: #E9DCCB;
+    --bs-btn-hover-border-color: #8A5A3A;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #6B4226;
+    --bs-btn-active-border-color: #6B4226;
+}
