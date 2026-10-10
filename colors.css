@@ -1,0 +1,27 @@
+body {
+    background-color: #FAF5EE;
+    color: #3E2415;
+}
+
+.navbar.bg-secondary-subtle {
+    background-color: #E9DCCB !important;
+}
+
+.navbar .text-dark,
+.navbar .navbar-brand {
+    color: #6B4226 !important;
+}
+
+h1.text-body-emphasis {
+    color: #6B4226 !important;
+}
+
+.btn.btn-outline-success {
+    --bs-btn-color: #6B4226;
+    --bs-btn-border-color: #6B4226;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #6B4226;
+    --bs-btn-hover-border-color: #6B4226;
+    --bs-btn-active-bg: #3E2415;
+    --bs-btn-active-border-color: #3E2415;
+}
