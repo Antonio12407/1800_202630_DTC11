@@ -19,7 +19,7 @@
 
 </head>
 
-<body>
+<body class="pb-5 mb-5">
 
     <!------------------------------>
     <!-- Your HTML Layout go here -->
@@ -27,7 +27,7 @@
     <!-- Stuff for body goes here -->
 
     <!--- Top Navbar Section starts --->
-    <nav class="navbar bg-secondary-subtle fixed-top d-none d-md-block">
+    <nav class="navbar bg-secondary-subtle fixed-top d-none d-md-block px-2">
         <div class="container-fluid">
 
             <!-- Left side: logo + app name, then Home -->
@@ -84,11 +84,29 @@
     </nav>
     <!-- Bottom Navbar Section ends -->
 
+    <!-- Top Section starts -->
+    <div class="d-none d-md-block py-5"></div>
+    <div class="top d-flex justify-content-between align-items-stretch px-2 mt-2 pt-md-0">
+
+        <!-- Left: Streak -->
+        <a href="#"
+            class=" text-dark text-decoration-none fs-1 bg-secondary-subtle d-flex align-items-center justify-content-center gap-2 px-3 py-1 border border-2 rounded-4 shadow-sm">
+            <i class="bi bi-fire" aria-hidden="true"></i>
+            <span class="fs-3 fw-bold">0</span>
+        </a>
+
+        <!-- Right: Tutorial -->
+        <a href="#"
+            class="text-dark fs-1 bg-secondary-subtle d-flex align-items-center justify-content-center gap-2 px-3 py-1 border border-2 rounded-4 shadow-sm">
+            <i class="bi bi-question-circle-fill" aria-hidden="true"></i>
+        </a>
+
+    </div>
+    <!-- Top Section ends -->
+
     <!-- Hero Section starts-->
     <div class="px-3 pb-5 text-center">
-        <div class="d-none d-md-block py-5"></div>
-        <div class="d-none d-md-block py-5"></div>
-        <div class="d-md-block py-2"></div>
+        <div class="d-none d-md-block py-3"></div>
 
         <img class="d-block mx-auto img-fluid" src="./images/quaggle-quagga-transparent.png" alt="Quaggle Logo"
             width="180">
@@ -96,18 +114,18 @@
             style="font-family: 'Bricolage Grotesque', Helvetica, sans-serif; font-size: clamp(3rem, 14vw, 84px); letter-spacing: -3px;">
             Quaggle</h1>
         <h1 id="formatted-date" class="display-6 fw-bold text-body-emphasis mt-4">Date</h1>
-        <div class="col-lg-8 mx-auto mt-4 p-4 border border-2 rounded-4 shadow-sm">
-            <p class="mb-0 fs-5">Quaggle is a mobile-friendly web application designed to help people identify
-                misinformation online. It uses short, gamified daily quizzes to teach users how to evaluate sources,
-                recognize
-                misleading information, and build better source-checking habits. Click the start button below to begin
-                today's
-                quiz!</p>
-        </div>
         <div class="col-lg-6 mx-auto mt-4">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                 <button type="button" class="btn btn-outline-success btn-lg px-4">Start Quiz</button>
             </div>
+        </div>
+        <div class="col-lg-8 mx-auto mt-4 p-4 border border-2 rounded-4 shadow-sm">
+            <p class="mb-0 fs-5">Quaggle is a mobile-friendly web application designed to help people identify
+                misinformation online. It uses short, gamified daily quizzes to teach users how to evaluate sources,
+                recognize
+                misleading information, and build better source-checking habits. Click the start button above to begin
+                today's
+                quiz!</p>
         </div>
     </div>
     <!-- Hero section Ends-->
