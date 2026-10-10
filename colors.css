@@ -8,7 +8,8 @@ body {
 }
 
 .navbar .text-dark,
-.navbar .navbar-brand {
+.navbar .navbar-brand,
+.streak .text-dark   {
     color: #6B4226 !important;
 }
 
