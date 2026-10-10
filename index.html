@@ -8,6 +8,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Other libraries go here -->
 
@@ -20,10 +21,67 @@
     <!------------------------------>
     <!-- Stuff for body goes here -->
 
+    <!--- Top Navbar Section starts --->
+    <nav class="navbar bg-secondary-subtle fixed-top d-none d-md-block">
+        <div class="container-fluid">
+
+            <!-- Left side: logo + app name, then Home -->
+            <div class="d-flex align-items-center gap-4">
+                <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="#">
+                    <img src="./images/quaggalogo.png" alt="Quaggle logo" width="80" height="70">
+                    <span class="fw-bold">Quaggle</span>
+                </a>
+
+                <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                    <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+
+            <!-- Right side: Profile and Settings -->
+            <div class="d-flex align-items-center gap-4">
+                <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                    <span>Profile</span>
+                    <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                </a>
+
+                <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                    <span>Settings</span>
+                    <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+    <!--- Top Navbar Section ends --->
+
+    <!-- Bottom Navbar Section starts -->
+    <nav class="navbar bg-secondary-subtle fixed-bottom d-md-none">
+        <div class="container-fluid flex-nowrap gap-3">
+
+            <a href="#" class="text-dark text-decoration-none text-center flex-fill">
+                <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
+                <small class="d-block">Home</small>
+            </a>
+
+            <a href="#" class="text-dark text-decoration-none text-center flex-fill">
+                <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                <small class="d-block">Profile</small>
+            </a>
+
+            <a href="#" class="text-dark text-decoration-none text-center flex-fill">
+                <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
+                <small class="d-block">Settings</small>
+            </a>
+
+        </div>
+    </nav>
+    <!-- Bottom Navbar Section ends -->
+
     <!-- Hero Section starts-->
-    <div class="px-3 py-5 my-2 mx-2 text-center bg-">
+    <div class="d-flex flex-column justify-content-center align-items-center text-center min-vh-100 px-3">
         <img class="d-block mx-auto" src="./images/quaggalogo.png" alt="" width="72" height="57">
-        <h1 class="display-5 fw-bold text-body-emphasis">Quaggle</h1>
+        <h1 class="display-3 fw-bold text-body-emphasis">Quaggle</h1>
         <h1 id="formatted-date" class="display-8 fw-bold text-body-emphasis">Date</h1>
         <p>Quaggle is a mobile-friendly web application designed to help people identify misinformation online. It uses
             short, gamified daily quizzes to teach users how to evaluate sources, recognize misleading information, and
@@ -34,6 +92,7 @@
             </div>
         </div>
     </div>
+
     <!-- Hero section Ends-->
 
     <!---------------------------------------------->
