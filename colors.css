@@ -3,13 +3,14 @@ body {
     color: #3E2415;
 }
 
-.navbar.bg-secondary-subtle {
+.navbar.bg-secondary-subtle,
+.top .bg-secondary-subtle {
     background-color: #E9DCCB !important;
 }
 
 .navbar .text-dark,
 .navbar .navbar-brand,
-.streak .text-dark   {
+.top .text-dark {
     color: #6B4226 !important;
 }
 
