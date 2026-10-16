@@ -1,4 +1,4 @@
-# Elmo Hikes
+# Quaggle
 
 ## Overview
 
@@ -46,16 +46,22 @@ Once the application is running:
 ## Project Structure
 
 ```
-elmo-hikes/
+1800_202630_DTC11/
 ├── src/
+│   ├── components/
+│   │   └── site-navbar.js
 │   ├── main.js
 ├── styles/
+│   ├── colors.css
 │   └── style.css
-├── public/
 ├── images/
 ├── index.html
+├── login.html
+├── main.html
+├── package-lock.json
 ├── package.json
 ├── README.md
+├── skeleton.html
 ```
 
 ---
