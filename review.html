@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My BCIT Project</title>
+    <meta name="comp1800 template" content="My 1800 App">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google fonts API -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap"
+        rel="stylesheet">
+
+    <!-- Color CSS stylesheet -->
+    <link href="styles/colors.css" rel="stylesheet">
+
+    <!-- Web Components for shared navbar and footer layout -->
+    <script type="module" src="/src/components/site-navbar.js"></script>
+
+    <style>
+        body {
+            background-color: #FAF5EE;
+            color: #3E2415;
+            font-family: Arial, sans-serif;
+            padding-top: 105px;
+        }
+
+        .quiz-container {
+            background-color: #FAF5EE;
+            max-width: 960px;
+            border: 2px solid #8A5A3A;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .review-header {
+            background-color: #E9DCCB;
+            padding: 28px;
+            text-align: center;
+            border-bottom: 2px solid #8A5A3A;
+        }
+
+        .review-header h1 {
+            font-size: 45px;
+            font-weight: 700;
+            color: #6B4226;
+            margin: 0;
+        }
+
+        .review-content {
+            display: flex;
+            flex-direction: column;
+            background-color: #D8C2AD;
+            gap: 20px;
+            padding: 30px;
+            min-height: 350px;
+        }
+
+        .question-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background-color: #E9DCCB;
+            border: 2px solid #8A5A3A;
+            border-radius: 20px;
+            padding: 25px 30px;
+            min-height: 140px;
+        }
+
+        .question-box h2 {
+            font-size: 35px;
+            font-weight: 600;
+            color: #3E2415;
+            margin: 0;
+        }
+
+        .go-back-button {
+            background-color: #6B4226;
+            color: #FAF5EE;
+            border: 2px solid #8A5A3A;
+            border-radius: 30px;
+            padding: 12px 28px;
+            font-size: 19px;
+        }
+
+        .go-back-button:hover {
+            border-color: black;
+            background-color: #3E2415;
+        }
+
+        .submit-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .submit-button {
+            background-color: #6B4226;
+            color: #FAF5EE;
+            border: 2px solid #8A5A3A;
+            border-radius: 30px;
+            padding: 12px 50px;
+            font-size: 19px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            border-color: black;
+            background-color: #3E2415;
+        }
+
+        @media (max-width: 575.98px) {
+            .quiz-container {
+                border-radius: 16px;
+            }
+
+            .review-header {
+                padding: 20px;
+            }
+
+            .review-header h1 {
+                font-size: 30px;
+            }
+
+            .review-content {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .question-box {
+                padding: 20px;
+                min-height: 100px;
+                gap: 12px;
+            }
+
+            .question-box h2 {
+                font-size: 24px;
+            }
+
+            .go-back-button {
+                padding: 10px 16px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 0;
+                padding-bottom: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+
+    <!-- our own navbar goes here -->
+    <site-navbar></site-navbar>
+
+    <!-- Main content goes here -->
+    <main class="container quiz-container px-0 my-4 shadow-sm">
+
+        <section class="review-header">
+            <h1>Final Review</h1>
+        </section>
+
+        <section class="review-content">
+
+            <div class="question-box">
+                <h2>Question 1</h2>
+                <button onclick="history.go(-3)" class="go-back-button" type="button">
+                    Go Back
+                </button>
+            </div>
+
+            <div class="question-box">
+                <h2>Question 2</h2>
+                <button onclick="history.go(-2)" class="go-back-button" type="button">
+                    Go Back
+                </button>
+            </div>
+
+            <div class="question-box">
+                <h2>Question 3</h2>
+                <button onclick="history.back()" class="go-back-button" type="button">
+                    Go Back
+                </button>
+            </div>
+
+            <div class="submit-container">
+                <button class="submit-button" type="button">
+                    Submit
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript scripts go here      -->
+    <!---------------------------------------------->
+
+</body>
+
+</html>
