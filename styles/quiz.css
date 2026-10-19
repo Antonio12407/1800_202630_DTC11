@@ -1,0 +1,122 @@
+body {
+    background-color: #FAF5EE !important;
+    color: #3E2415;
+    font-family: Arial, sans-serif;
+}
+
+.quiz-container {
+    background-color: #FAF5EE;
+    width: calc(100% - 32px);
+    max-width: 960px;
+    margin: 32px auto;
+    border: 2px solid #8A5A3A;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(62, 36, 21, 0.08);
+}
+
+.question-container {
+    background-color: #E9DCCB;
+    padding: 32px !important;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.question-container h1 {
+    color: #6B4226;
+    font-weight: 700;
+}
+
+.image-placeholder {
+    width: 40%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    float: right;
+    margin: 0 0 20px 24px;
+    background-color: #FAF5EE;
+    border: 2px solid #8A5A3A;
+    border-radius: 16px;
+}
+
+.quiz-container > section:last-child {
+    background-color: #FAF5EE !important;
+    padding: 28px !important;
+}
+
+.answer-button {
+    background-color: #3E2415;
+    color: #fff;
+    border: 2px solid #3E2415;
+    border-radius: 14px;
+    min-height: 80px;
+    padding: 16px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.answer-button:hover,
+.answer-button:focus-visible {
+    background-color: #E9DCCB;
+    color: #3E2415;
+    border-color: #8A5A3A;
+}
+
+.answer-button:focus-visible {
+    outline: 3px solid #8A5A3A;
+    outline-offset: 3px;
+}
+
+.answer-button:active {
+    background-color: #6B4226 !important;
+    color: #fff !important;
+    border-color: #6B4226 !important;
+}
+
+.quiz-container .text-secondary {
+    color: #6B4226 !important;
+}
+
+.progress {
+    height: 18px;
+    border-radius: 20px;
+    background-color: #E9DCCB;
+}
+
+.progress-bar {
+    background-color: #6B4226 !important;
+    color: #fff;
+}
+
+@media (max-width: 575.98px) {
+    .quiz-container {
+        width: calc(100% - 24px);
+        margin: 16px auto;
+        border-radius: 16px;
+    }
+
+    .question-container {
+        padding: 20px !important;
+        font-size: 1rem;
+    }
+
+    .question-container h1 {
+        font-size: 1.8rem;
+    }
+
+    .image-placeholder {
+        margin: 0 0 12px 14px;
+        border-radius: 12px;
+    }
+
+    .quiz-container > section:last-child {
+        padding: 20px !important;
+    }
+
+    .answer-button {
+        min-height: 65px;
+        padding: 12px;
+        font-size: 1.05rem;
+    }
+}
