@@ -1,9 +1,11 @@
-// Import Firebase authentication tools
+import { logoutUser } from '/src/authentication.js';   // Our function to log out the user
+import { onAuthReady } from "/src/authentication.js";  // Our function to get authenticated user
 
 class SiteNavbar extends HTMLElement {
     constructor() {
         super();
         this.renderNavbar();
+        this.renderAuthControls();
     }
 
     renderNavbar() {
@@ -28,10 +30,7 @@ class SiteNavbar extends HTMLElement {
 
                 <!-- Right side: Profile and Settings -->
                 <div class="d-flex align-items-center gap-4">
-                    <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
-                        <span class="fs-5">Profile</span>
-                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                    </a>
+                    <div id="authControlsDesktop"></div>
 
                     <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
                         <span class="fs-5">Settings</span>
@@ -52,10 +51,7 @@ class SiteNavbar extends HTMLElement {
                     <small class="d-block">Home</small>
                 </div>
 
-                <a href="#" class="text-dark text-decoration-none text-center flex-fill">
-                    <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                    <small class="d-block">Profile</small>
-                </a>
+                <div id="authControls" class="text-center flex-fill"></div>
 
                 <a href="#" class="text-dark text-decoration-none text-center flex-fill">
                     <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
@@ -66,6 +62,45 @@ class SiteNavbar extends HTMLElement {
         </nav>
         <!-- Bottom Navbar Section ends -->
         `;
+    }
+
+    /**
+     * Displays Log in or Log out button in the navbar based on Firebase authentication status.
+     * Updates automatically when the user's login status changes.
+     */
+    renderAuthControls() {
+        const authControls = this.querySelector('#authControls');               // mobile
+        const authControlsDesktop = this.querySelector('#authControlsDesktop'); // desktop
+
+        // Pass a callback that runs when Firebase reports the login status
+        onAuthReady(function (user) { // Receives the user object (or null)
+
+            if (user) { // User is logged in
+                authControls.innerHTML = `<a href="index.html" id="signOutBtn" class="text-dark text-decoration-none d-block">
+                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                        <small class="d-block">Log out</small>
+                    </a>`;
+
+                authControlsDesktop.innerHTML = `<a href="index.html" id="signOutBtnDesktop" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                        <span class="fs-5">Log out</span>
+                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                    </a>`;
+
+                authControls.querySelector('#signOutBtn').addEventListener('click', logoutUser);
+                authControlsDesktop.querySelector('#signOutBtnDesktop').addEventListener('click', logoutUser);
+
+            } else { // User is NOT logged in
+                authControls.innerHTML = `<a href="login.html" class="text-dark text-decoration-none d-block">
+                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                        <small class="d-block">Log in</small>
+                    </a>`;
+
+                authControlsDesktop.innerHTML = `<a href="login.html" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                        <span class="fs-5">Log in</span>
+                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
+                    </a>`;
+            }
+        });
     }
 }
 
