@@ -61,6 +61,8 @@
                 Submit
             </button>
 
+            <a data-quiz-history hidden href="history.html" class="d-block text-center mt-3">Quiz History</a>
+
             <p id="submit-message"
                class="text-center mt-3 mb-0"
                role="status"></p>
@@ -93,9 +95,51 @@
                     document.getElementById("submit-message").textContent =
                         "Please answer all three questions before submitting.";
                 } else {
-                    window.location.href = "review.html";
+                    try {
+                        const key = "quaggleQuizHistory";
+                        const saved = JSON.parse(localStorage.getItem(key) || "[]");
+                        if (!Array.isArray(saved)) throw new Error("Invalid history");
+                        const correctAnswers = [
+                            "B. Check other reliable sources",
+                            "A. Check its original date and source",
+                            "C. Their evidence, authors, and dates"
+                        ];
+                        const answers = [answer1, answer2, answer3];
+                        const score = answers.filter(function (answer, index) {
+                            return answer === correctAnswers[index];
+                        }).length;
+                        saved.push({
+                            title: "Misinformation Quiz",
+                            score: score,
+                            total: 3,
+                            answers: answers,
+                            correctAnswers: correctAnswers,
+                            completedAt: new Date().toISOString()
+                        });
+                        localStorage.setItem(key, JSON.stringify(saved));
+                        // Clear the completed attempt so it cannot be submitted twice.
+                        for (let number = 1; number <= 3; number++) {
+                            sessionStorage.removeItem("question" + number + "Answer");
+                        }
+                        window.location.href = "history.html";
+                    } catch (error) {
+                        document.getElementById("submit-message").textContent =
+                            "Could not save your quiz. Check that browser storage is enabled, then try again.";
+                    }
                 }
             });
+    </script>
+
+
+    <style>[data-quiz-history][hidden] { display: none !important; }</style>
+    <script type="module">
+        import { auth } from "/src/firebaseConfig.js";
+        import { onAuthStateChanged } from "firebase/auth";
+        onAuthStateChanged(auth, function (user) {
+            document.querySelectorAll("[data-quiz-history]").forEach(function (link) {
+                link.hidden = !user;
+            });
+        });
     </script>
 
 </body>
