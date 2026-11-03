@@ -58,6 +58,7 @@
           </a>
         </div>
 
+<<<<<<<<< Temporary merge branch 1
             <div class="review-row">
                 <span class="question-label">Q2</span>
                 <a href="quiz.html?question=2&amp;review=true"
@@ -89,6 +90,18 @@
                role="status"></p>
 
         </section>
+=========
+      <div class="review-row">
+        <span class="question-label">Q3</span>
+        <a href="quiz.html?question=3&amp;review=true" id="answer-three" class="btn review-answer">
+          Not answered
+        </a>
+      </div>
+>>>>>>>>> Temporary merge branch 2
+
+      <button type="button" id="submit-button" class="btn submit-button w-100 mt-2">
+        Submit
+      </button>
 
         <p id="submit-message" class="text-center mt-3 mb-0" role="status"></p>
       </section>
@@ -108,13 +121,7 @@
 
       window.addEventListener("pageshow", displayAnswers);
 
-      document
-        .getElementById("submit-button")
-        .addEventListener("click", function () {
-          const answer1 = sessionStorage.getItem("question1Answer");
-          const answer2 = sessionStorage.getItem("question2Answer");
-          const answer3 = sessionStorage.getItem("question3Answer");
-
+<<<<<<<<< Temporary merge branch 1
                 if (!answer1 || !answer2 || !answer3) {
                     document.getElementById("submit-message").textContent =
                         "Please answer all three questions before submitting.";
@@ -169,3 +176,31 @@
 </body>
 
 </html>
+=========
+    document
+      .getElementById("submit-button")
+      .addEventListener("click", function () {
+        const answer1 = sessionStorage.getItem("question1Answer");
+        const answer2 = sessionStorage.getItem("question2Answer");
+        const answer3 = sessionStorage.getItem("question3Answer");
+
+        if (!answer1 || !answer2 || !answer3) {
+          document.getElementById("submit-message").textContent =
+            "Please answer all three questions before submitting.";
+        } else {
+          if (sessionStorage.getItem("quaggle_completed_today") !== "true") {
+            let currentStreak =
+              parseInt(sessionStorage.getItem("quaggle_streak"), 10) || 0;
+            currentStreak += 1;
+            sessionStorage.setItem("quaggle_streak", currentStreak);
+            sessionStorage.setItem("quaggle_completed_today", "true");
+          }
+
+          window.location.href = "results.html";
+        }
+      });
+  </script>
+</body>
+
+</html>
+>>>>>>>>> Temporary merge branch 2
