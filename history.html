@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz History | Quaggle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="styles/colors.css" rel="stylesheet">
+    <script type="module" src="/src/components/site-navbar.js"></script>
+    <style>
+        body { margin: 0; padding: 105px 16px 40px; }
+        main { max-width: 960px; margin: 24px auto; border: 2px solid #8A5A3A; border-radius: 20px; overflow: hidden; }
+        main > header { background: #E9DCCB; padding: 28px; border-bottom: 2px solid #8A5A3A; }
+        main h1 { color: #6B4226; font-weight: 700; margin: 0 0 12px; }
+        .content { padding: 28px; }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+        #history-list { padding: 0; margin: 20px 0 0; list-style: none; }
+        .attempt { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; padding: 22px; border: 1px solid #8A5A3A; border-radius: 16px; background: #E9DCCB; margin-top: 16px; }
+        .attempt-actions { display: flex; flex-wrap: wrap; gap: 10px; width: 100%; }
+        .attempt-details { width: 100%; border-top: 1px solid #8A5A3A; padding-top: 16px; }
+        .attempt-details p:last-child { margin-bottom: 0; }
+        .attempt h2 { font-size: 1.2rem; margin: 0 0 8px; }
+        .score { font-size: 1.4rem; font-weight: 700; text-align: center; white-space: nowrap; }
+        .score small { display: block; font-size: 1rem; }
+        @media(max-width: 767px) { body { padding-top: 0; padding-bottom: 120px; } main > header, .content { padding: 20px; } main h1 { font-size: 2rem; } }
+        @media(max-width: 380px) { .attempt { align-items: flex-start; flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <site-navbar></site-navbar>
+    <main>
+        <header>
+            <h1>Quiz History</h1>
+            <p class="mb-0">Look back at your completed quizzes and scores.</p>
+            <nav class="actions" aria-label="Quiz navigation">
+                <a class="btn btn-outline-secondary btn-lg px-4" href="main.html">Home</a>
+                <a class="btn btn-outline-success btn-lg px-4" href="quiz.html">Take a Quiz</a>
+            </nav>
+        </header>
+        <section class="content" aria-label="Completed quizzes">
+            <p id="summary" role="status"></p>
+            <p id="empty" hidden>No completed quizzes yet. Take a quiz to see your score here.</p>
+            <ol id="history-list"></ol>
+            <p class="mt-4 mb-0 small">History is saved in this browser on this device.</p>
+        </section>
+    </main>
+    <script>
+        function displayHistory() {
+            const list = document.getElementById("history-list");
+            const summary = document.getElementById("summary");
+            list.replaceChildren();
+            document.getElementById("empty").hidden = true;
+            try {
+                const history = JSON.parse(localStorage.getItem("quaggleQuizHistory") || "[]");
+                if (!Array.isArray(history)) throw new Error("Invalid history");
+                const attempts = history.filter(function (attempt) {
+                    return attempt && typeof attempt.title === "string" &&
+                        Number.isInteger(attempt.score) && Number.isInteger(attempt.total) &&
+                        attempt.total > 0 && attempt.score >= 0 && attempt.score <= attempt.total &&
+                        typeof attempt.completedAt === "string" &&
+                        Number.isFinite(Date.parse(attempt.completedAt));
+                });
+                attempts.sort(function (a, b) {
+                    return new Date(b.completedAt) - new Date(a.completedAt);
+                });
+                summary.textContent = attempts.length + (attempts.length === 1 ? " completed quiz" : " completed quizzes");
+                document.getElementById("empty").hidden = attempts.length !== 0;
+                attempts.forEach(function (attempt, attemptIndex) {
+                    const row = document.createElement("li");
+                    row.className = "attempt";
+                    const details = document.createElement("div");
+                    const title = document.createElement("h2");
+                    title.textContent = attempt.title;
+                    const date = document.createElement("time");
+                    date.dateTime = attempt.completedAt;
+                    date.textContent = new Date(attempt.completedAt).toLocaleString(undefined, {
+                        year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
+                    });
+                    const score = document.createElement("div");
+                    score.className = "score";
+                    score.textContent = attempt.score + " / " + attempt.total;
+                    const percent = document.createElement("small");
+                    percent.textContent = Math.round(attempt.score / attempt.total * 100) + "%";
+                    score.append(percent);
+                    details.append(title, date);
+                    const actions = document.createElement("div");
+                    actions.className = "attempt-actions";
+                    const view = document.createElement("button");
+                    view.type = "button";
+                    view.className = "btn btn-outline-secondary px-4";
+                    view.textContent = "View";
+                    const retry = document.createElement("button");
+                    retry.type = "button";
+                    retry.className = "btn btn-outline-success px-4";
+                    retry.textContent = "Retry";
+                    const result = document.createElement("div");
+                    result.className = "attempt-details";
+                    result.id = "attempt-details-" + attemptIndex;
+                    result.hidden = true;
+                    view.setAttribute("aria-controls", result.id);
+                    view.setAttribute("aria-expanded", "false");
+                    const heading = document.createElement("h3");
+                    heading.className = "h5";
+                    heading.textContent = "Quiz result";
+                    const resultSummary = document.createElement("p");
+                    resultSummary.textContent = "Score: " + attempt.score + " / " + attempt.total +
+                        " (" + Math.round(attempt.score / attempt.total * 100) + "%). Completed: " + date.textContent;
+                    result.append(heading, resultSummary);
+                    if (Array.isArray(attempt.answers) && attempt.answers.length === attempt.total) {
+                        attempt.answers.forEach(function (answer, index) {
+                            const line = document.createElement("p");
+                            const label = document.createElement("strong");
+                            label.textContent = "Question " + (index + 1);
+                            const selected = document.createElement("span");
+                            selected.className = "d-block";
+                            selected.textContent = "Your answer: " + answer;
+                            line.append(label, selected);
+                            if (Array.isArray(attempt.correctAnswers) && typeof attempt.correctAnswers[index] === "string") {
+                                const correct = document.createElement("span");
+                                correct.className = "d-block";
+                                correct.textContent = answer === attempt.correctAnswers[index]
+                                    ? "Correct" : "Correct answer: " + attempt.correctAnswers[index];
+                                line.append(correct);
+                            }
+                            result.append(line);
+                        });
+                    } else {
+                        const note = document.createElement("p");
+                        note.textContent = "Answer details were not saved for this older quiz.";
+                        result.append(note);
+                    }
+                    view.addEventListener("click", function () {
+                        result.hidden = !result.hidden;
+                        view.textContent = result.hidden ? "View" : "Hide";
+                        view.setAttribute("aria-expanded", String(!result.hidden));
+                    });
+                    retry.addEventListener("click", function () {
+                        try {
+                            for (let number = 1; number <= 3; number++) {
+                                sessionStorage.removeItem("question" + number + "Answer");
+                            }
+                            window.location.href = "quiz.html?question=1";
+                        } catch (error) {
+                            summary.textContent = "Could not start a retry. Check that browser storage is enabled and try again.";
+                        }
+                    });
+                    actions.append(view, retry);
+                    row.append(details, score, actions, result);
+                    list.append(row);
+                });
+            } catch (error) {
+                summary.textContent = "Could not load quiz history. Check that browser storage is enabled and try again.";
+            }
+        }
+        window.addEventListener("pageshow", displayHistory);
+        window.addEventListener("storage", displayHistory);
+    </script>
+</body>
+</html>
