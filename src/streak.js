@@ -1,45 +1,87 @@
 // src/streak.js
 // -------------------------------------------------------------
-// Saves and loads each user's quiz streak in Firestore, so it survives
-// page refreshes, browser restarts, and switching devices.
-//
-// Firestore layout:  users/{uid}  ->  { streak, lastCompletedDate }
+// Daily quiz streak, stored on each user's Firestore document:
+//   users/{uid} -> { currentStreak: number, lastQuizDate: "YYYY-MM-DD" }
+// Dates are the user's LOCAL calendar day.
 // -------------------------------------------------------------
 
-import { db } from "/src/firebaseConfig.js";
-import { doc, getDoc, runTransaction } from "firebase/firestore";
-import { applyCompletion, effectiveStreak } from "/src/streakLogic.js";
+import { db } from "./firebaseConfig.js";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
-const userRef = (uid) => doc(db, "users", uid);
+// Get today's date in YYYY-MM-DD format.
+export function getTodayDate() {
+  const today = new Date();
 
-// Loads the saved data for a user.
-// Returns { streak, lastCompletedDate }, where `streak` is already 0 if
-// the streak has been broken (missed a day).
-export async function getStreakData(uid) {
-  const snap = await getDoc(userRef(uid));
-  const data = snap.exists() ? snap.data() : null;
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return year + "-" + month + "-" + day;
+}
+
+// Find how many calendar days are between two YYYY-MM-DD dates.
+// Uses UTC midnights so daylight-saving changes can't shift the result.
+function daysBetween(firstDate, secondDate) {
+  const [y1, m1, d1] = firstDate.split("-").map(Number);
+  const [y2, m2, d2] = secondDate.split("-").map(Number);
+
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / oneDay);
+}
+
+// Read the saved streak fields for a user (defaults if none yet).
+async function loadStreak(user) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const userRef = doc(db, "users", user.uid);
+  const data = (await getDoc(userRef)).data() || {};
+
   return {
-    streak: effectiveStreak(data),
-    lastCompletedDate: data?.lastCompletedDate ?? null,
+    userRef: userRef,
+    currentStreak: data.currentStreak || 0,
+    lastQuizDate: data.lastQuizDate || ""
   };
 }
 
-// Call once when the user finishes a quiz.
-// Uses a transaction so a double click or two open tabs can't count twice.
-// Returns { streak, lastCompletedDate, changed }.
-export async function recordQuizCompletion(uid) {
-  return runTransaction(db, async (tx) => {
-    const ref = userRef(uid);
-    const snap = await tx.get(ref);
-    const result = applyCompletion(snap.exists() ? snap.data() : null);
+// Called when the user submits a completed quiz.
+// Returns the new streak.
+export async function recordQuizCompletion(user) {
+  const { userRef, currentStreak, lastQuizDate } = await loadStreak(user);
+  const today = getTodayDate();
 
-    if (result.changed) {
-      tx.set(
-        ref,
-        { streak: result.streak, lastCompletedDate: result.lastCompletedDate },
-        { merge: true },
-      );
-    }
-    return result;
-  });
+  // A quiz was already completed today: don't count it twice.
+  if (lastQuizDate === today) {
+    return currentStreak;
+  }
+
+  // Quiz yesterday extends the streak; first quiz or a missed day starts at 1.
+  const completedYesterday =
+    lastQuizDate !== "" && daysBetween(lastQuizDate, today) === 1;
+  const newStreak = completedYesterday ? currentStreak + 1 : 1;
+
+  await setDoc(userRef, {
+    currentStreak: newStreak,
+    lastQuizDate: today
+  }, { merge: true });
+
+  return newStreak;
+}
+
+// Called when the dashboard loads.
+// Returns the streak to display and whether today's quiz is done.
+export async function getStreakData(user) {
+  const { currentStreak, lastQuizDate } = await loadStreak(user);
+  const today = getTodayDate();
+
+  // The streak is only alive if the last quiz was today or yesterday.
+  // (No need to save the reset: recordQuizCompletion starts over at 1.)
+  const alive =
+    lastQuizDate !== "" && daysBetween(lastQuizDate, today) <= 1;
+
+  return {
+    currentStreak: alive ? currentStreak : 0,
+    completedToday: lastQuizDate === today
+  };
 }

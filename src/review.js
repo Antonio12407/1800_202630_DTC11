@@ -25,7 +25,7 @@ submitBtn?.addEventListener("click", async () => {
 
   submitBtn.disabled = true; // prevent double clicks
   try {
-    await recordQuizCompletion(currentUser.uid);
+    await recordQuizCompletion(currentUser);
     location.href = "main.html"; // streak badge there shows the new value
   } catch (err) {
     console.error("Could not save quiz completion:", err);

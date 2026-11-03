@@ -2,17 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
 // --------------------------------------
-// Get today's date
+// Show today's date, e.g. "November 3, 2026"
 // --------------------------------------
 
-const dateElement = document.getElementById("formatted-date");
-const today = new Date();
-const day = today.getDate();
-const month = today.getMonth() + 1;
-const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-const year = today.getFullYear();
-
-dateElement.innerHTML = `${months[month]} ${day}, ${year}`;
+document.getElementById("formatted-date").textContent =
+    new Date().toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
