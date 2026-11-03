@@ -1,4 +1,5 @@
 import { onAuthReady } from "/src/authentication.js";
+import { getStreakData } from "/src/streak.js";
 
 // If you have custom global styles, import them as well:
 // import '../styles/style.css';
@@ -44,7 +45,17 @@ function checkQuizLimit() {
   }
 }
 
+// Load the saved streak into the badge
+onAuthReady(async function (user) {
+  if (!user) return; // showName() above already redirects logged-out users
+  try {
+    const { streak } = await getStreakData(user.uid);
+    document.getElementById("streak-count").textContent = streak;
+  } catch (err) {
+    console.error("Could not load streak:", err);
+  }
+});
+
 showName();
 checkQuizLimit();
-
-// document.addEventListener('DOMContentLoaded', sayHello);
+export const db = getFirestore(app);
