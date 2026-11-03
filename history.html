@@ -32,10 +32,7 @@
 </head>
 <body>
     <site-navbar></site-navbar>
-    <p id="history-sign-in" class="container mt-4" role="status">
-        Please <a href="login.html">sign in</a> to view your quiz history.
-    </p>
-    <main id="signed-in-history" hidden>
+    <main>
         <header>
             <h1>Quiz History</h1>
             <p class="mb-0">Look back at your completed quizzes and scores.</p>
@@ -51,15 +48,11 @@
             <p class="mt-4 mb-0 small">History is saved in this browser on this device.</p>
         </section>
     </main>
-    <script type="module">
-        import { auth } from "/src/firebaseConfig.js";
-        import { onAuthStateChanged } from "firebase/auth";
-        let signedIn = false;
+    <script>
         function displayHistory() {
             const list = document.getElementById("history-list");
             const summary = document.getElementById("summary");
             list.replaceChildren();
-            if (!signedIn) return;
             document.getElementById("empty").hidden = true;
             try {
                 const history = JSON.parse(localStorage.getItem("quaggleQuizHistory") || "[]");
@@ -163,12 +156,6 @@
                 summary.textContent = "Could not load quiz history. Check that browser storage is enabled and try again.";
             }
         }
-        onAuthStateChanged(auth, function (user) {
-            signedIn = Boolean(user);
-            document.getElementById("signed-in-history").hidden = !signedIn;
-            document.getElementById("history-sign-in").hidden = signedIn;
-            displayHistory();
-        });
         window.addEventListener("pageshow", displayHistory);
         window.addEventListener("storage", displayHistory);
     </script>
