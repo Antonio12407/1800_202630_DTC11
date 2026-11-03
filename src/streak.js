@@ -36,7 +36,7 @@ export async function recordQuizCompletion(user) {
     throw new Error("Please sign in first.");
   }
 
-  const userRef = doc(db, "Users", user.uid);
+  const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
 
   let currentStreak = 0;
@@ -93,7 +93,7 @@ export async function getStreakData(user) {
     throw new Error("Please sign in first.");
   }
 
-  const userRef = doc(db, "Users", user.uid);
+  const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
 
   if (!userSnap.exists()) {

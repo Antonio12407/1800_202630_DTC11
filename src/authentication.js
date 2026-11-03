@@ -68,7 +68,8 @@ export async function signupUser(name, email, password) {
       name: name,
       email: email,
       country: "Canada", // Default value
-      streak: 0     // Default value
+      currentStreak: 0, // Default value (read by src/streak.js)
+      lastQuizDate: ""  // Default value: no quiz completed yet
     });
     console.log("Firestore user document created successfully!");
 } catch (error) {

@@ -49,8 +49,8 @@ function checkQuizLimit() {
 onAuthReady(async function (user) {
   if (!user) return; // showName() above already redirects logged-out users
   try {
-    const { streak } = await getStreakData(user.uid);
-    document.getElementById("streak-count").textContent = streak;
+    const { currentStreak } = await getStreakData(user);
+    document.getElementById("streak-count").textContent = currentStreak;
   } catch (err) {
     console.error("Could not load streak:", err);
   }
@@ -58,4 +58,3 @@ onAuthReady(async function (user) {
 
 showName();
 checkQuizLimit();
-export const db = getFirestore(app);

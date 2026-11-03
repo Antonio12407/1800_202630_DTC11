@@ -204,7 +204,6 @@
           } else if (questionNumber < questions.length) {
             window.location.href = "quiz.html?question=" + (questionNumber + 1);
           } else {
-            sessionStorage.setItem("quaggle_completed_today", "true");
             window.location.href = "answer.html";
           }
         });

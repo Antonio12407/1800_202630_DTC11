@@ -52,7 +52,16 @@
     </section>
   </main>
 
-  <script>
+  <script type="module">
+    import { onAuthReady } from "/src/authentication.js";
+    import { recordQuizCompletion } from "/src/streak.js";
+
+    // The streak is saved per user, so remember who is logged in.
+    let currentUser = null;
+    onAuthReady(function (user) {
+      currentUser = user;
+    });
+
     function displayAnswers() {
       document.getElementById("answer-one").textContent =
         sessionStorage.getItem("question1Answer") || "Not answered";
@@ -68,24 +77,37 @@
 
     document
       .getElementById("submit-button")
-      .addEventListener("click", function () {
+      .addEventListener("click", async function () {
+        const submitButton = this;
+        const message = document.getElementById("submit-message");
         const answer1 = sessionStorage.getItem("question1Answer");
         const answer2 = sessionStorage.getItem("question2Answer");
         const answer3 = sessionStorage.getItem("question3Answer");
 
         if (!answer1 || !answer2 || !answer3) {
-          document.getElementById("submit-message").textContent =
+          message.textContent =
             "Please answer all three questions before submitting.";
-        } else {
-          if (sessionStorage.getItem("quaggle_completed_today") !== "true") {
-            let currentStreak =
-              parseInt(sessionStorage.getItem("quaggle_streak"), 10) || 0;
-            currentStreak += 1;
-            sessionStorage.setItem("quaggle_streak", currentStreak);
-            sessionStorage.setItem("quaggle_completed_today", "true");
-          }
+          return;
+        }
 
+        if (!currentUser) {
+          message.textContent = "Please log in to save your streak.";
+          return;
+        }
+
+        submitButton.disabled = true; // prevent double clicks
+        message.textContent = "Saving...";
+
+        try {
+          // Quiz is complete: increase the streak in Firestore
+          // (only once per day; recordQuizCompletion handles that).
+          await recordQuizCompletion(currentUser);
+          sessionStorage.setItem("quaggle_completed_today", "true");
           window.location.href = "results.html";
+        } catch (error) {
+          console.error("Could not save quiz completion:", error);
+          message.textContent = "Could not save your progress. Please try again.";
+          submitButton.disabled = false;
         }
       });
   </script>
