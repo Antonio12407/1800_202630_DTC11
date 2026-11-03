@@ -69,6 +69,7 @@ class SiteNavbar extends HTMLElement {
      * Updates automatically when the user's login status changes.
      */
     renderAuthControls() {
+        
         const authControls = this.querySelector('#authControls');               // mobile
         const authControlsDesktop = this.querySelector('#authControlsDesktop'); // desktop
 
@@ -100,6 +101,7 @@ class SiteNavbar extends HTMLElement {
                         <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
                     </a>`;
             }
+
         });
     }
 }
