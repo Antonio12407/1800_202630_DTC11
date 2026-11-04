@@ -7,20 +7,18 @@
 // -------------------------------------------------------------
 
 import { onAuthReady } from "/src/authentication.js";
-import { recordQuizCompletion } from "/src/streak.js";
+import { recordQuizCompletion, checkDailyQuizLimit } from "/src/streak.js";
 
 const submitBtn = document.getElementById("submit-quiz");
 const parameters = new URLSearchParams(window.location.search);
 
 let currentUser = null;
 
-// Only logged-in users can complete a quiz (the streak is saved per user).
+// Only logged-in users can complete a quiz (the streak is saved per user),
+// and only once per day. checkDailyQuizLimit redirects otherwise.
 onAuthReady((user) => {
-  if (!user) {
-    location.href = "login.html";
-    return;
-  }
   currentUser = user;
+  checkDailyQuizLimit(user);
 });
 
 // Display the answers selected by the user.

@@ -97,3 +97,29 @@ export async function getStreakData(user) {
     completedToday: lastQuizDate === today
   };
 }
+
+// Called by the quiz pages (quiz, answer, review) once Firebase reports
+// the user. Enforces one quiz per day using the saved completion date,
+// so it can't be skipped by opening a quiz page directly, in a new tab,
+// or on another device.
+export async function checkDailyQuizLimit(user) {
+  // The quiz is saved per user, so it needs a login.
+  if (!user) {
+    location.href = "login.html";
+    return;
+  }
+
+  try {
+    const { completedToday } = await getStreakData(user);
+
+    // Today's quiz is already done: back to the dashboard,
+    // which shows "Completed Today".
+    if (completedToday) {
+      location.replace("main.html");
+    }
+  } catch (error) {
+    // If Firestore can't be reached, let the user keep going;
+    // submitting still won't count the same day twice.
+    console.error("Could not check today's quiz:", error);
+  }
+}

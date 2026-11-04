@@ -10,9 +10,6 @@
 
   <link href="styles/colors.css" rel="stylesheet" />
   <link href="styles/answer.css" rel="stylesheet" />
-
-  <!-- One quiz per day (checks the Firestore completion date) -->
-  <script type="module" src="/src/quizGuard.js"></script>
 </head>
 
 <body>
@@ -57,12 +54,14 @@
 
   <script type="module">
     import { onAuthReady } from "/src/authentication.js";
-    import { recordQuizCompletion } from "/src/streak.js";
+    import { recordQuizCompletion, checkDailyQuizLimit } from "/src/streak.js";
 
     // The streak is saved per user, so remember who is logged in.
+    // Also enforce one quiz per day (redirects if already done).
     let currentUser = null;
     onAuthReady(function (user) {
       currentUser = user;
+      checkDailyQuizLimit(user);
     });
 
     // Saved answers for questions 1-3 (quiz.html stores them).
