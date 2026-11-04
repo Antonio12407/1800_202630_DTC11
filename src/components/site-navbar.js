@@ -22,7 +22,7 @@ class SiteNavbar extends HTMLElement {
                             style="font-family: 'Bricolage Grotesque', Helvetica, sans-serif; font-size: 34px; letter-spacing: -1px;">Quaggle</span>
                     </a>
 
-                    <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2 mx-2">
+                    <a href="main.html" class="text-dark text-decoration-none d-flex align-items-center gap-2 mx-2">
                         <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
                         <span class="fs-5">Home</span>
                     </a>
@@ -69,7 +69,7 @@ class SiteNavbar extends HTMLElement {
      * Updates automatically when the user's login status changes.
      */
     renderAuthControls() {
-        
+
         const authControls = this.querySelector('#authControls');               // mobile
         const authControlsDesktop = this.querySelector('#authControlsDesktop'); // desktop
 
