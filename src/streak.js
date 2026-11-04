@@ -20,7 +20,7 @@ export function getTodayDate() {
 }
 
 // Find how many calendar days are between two YYYY-MM-DD dates.
-// Uses UTC midnights so daylight-saving changes can't shift the result.
+// Uses UTC so daylight-saving changes can't shift the result.
 function daysBetween(firstDate, secondDate) {
   const [y1, m1, d1] = firstDate.split("-").map(Number);
   const [y2, m2, d2] = secondDate.split("-").map(Number);
@@ -69,19 +69,31 @@ export async function recordQuizCompletion(user) {
   return newStreak;
 }
 
-// Called when the dashboard loads.
+// Called when the dashboard (or a quiz page) loads.
+// Resets and saves the streak if a full calendar day was missed.
 // Returns the streak to display and whether today's quiz is done.
 export async function getStreakData(user) {
-  const { currentStreak, lastQuizDate } = await loadStreak(user);
+  const { userRef, currentStreak, lastQuizDate } = await loadStreak(user);
   const today = getTodayDate();
 
   // The streak is only alive if the last quiz was today or yesterday.
-  // (No need to save the reset: recordQuizCompletion starts over at 1.)
-  const alive =
-    lastQuizDate !== "" && daysBetween(lastQuizDate, today) <= 1;
+  // A gap of 2+ days means at least one whole day had no quiz.
+  const missedDay =
+    lastQuizDate !== "" && daysBetween(lastQuizDate, today) > 1;
+
+  if (missedDay && currentStreak !== 0) {
+    // Save the reset so Firestore matches what the user sees.
+    // Only writes once: after this the stored streak is already 0.
+    try {
+      await setDoc(userRef, { currentStreak: 0 }, { merge: true });
+    } catch (error) {
+      // Still show 0; the reset will be saved on the next load.
+      console.error("Could not save streak reset:", error);
+    }
+  }
 
   return {
-    currentStreak: alive ? currentStreak : 0,
+    currentStreak: missedDay ? 0 : currentStreak,
     completedToday: lastQuizDate === today
   };
 }
