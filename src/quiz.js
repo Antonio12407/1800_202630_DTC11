@@ -1,6 +1,12 @@
 
 import { db } from "./firebaseConfig.js";
 import { collection, getDocs } from "firebase/firestore";
+import { onAuthReady } from "./authentication.js";
+import { checkDailyQuizLimit } from "./streak.js";
+
+// One quiz per day: redirects if today's quiz is already done
+// (or to login if signed out). Uses the saved Firestore date.
+onAuthReady(checkDailyQuizLimit);
 
 async function loadQuiz() {
     const answerButtons = document.querySelectorAll(".answer-button");

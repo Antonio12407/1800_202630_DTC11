@@ -7,20 +7,18 @@
 // -------------------------------------------------------------
 
 import { onAuthReady } from "/src/authentication.js";
-import { recordQuizCompletion } from "/src/streak.js";
+import { recordQuizCompletion, checkDailyQuizLimit } from "/src/streak.js";
 
 const submitBtn = document.getElementById("submit-quiz");
 const parameters = new URLSearchParams(window.location.search);
 
 let currentUser = null;
 
-// Only logged-in users can complete a quiz (the streak is saved per user).
+// Only logged-in users can complete a quiz (the streak is saved per user),
+// and only once per day. checkDailyQuizLimit redirects otherwise.
 onAuthReady((user) => {
-  if (!user) {
-    location.href = "login.html";
-    return;
-  }
   currentUser = user;
+  checkDailyQuizLimit(user);
 });
 
 // Display the answers selected by the user.
@@ -90,7 +88,9 @@ submitBtn?.addEventListener("click", async () => {
   submitBtn.disabled = true; // prevent double clicks
   try {
     await recordQuizCompletion(currentUser);
-    location.href = "results.html"; // streak badge there shows the new value
+    // Pass the selected answers (answer1, answer2, ...) along so the
+    // results page can score them and save them to quiz history.
+    location.href = "results.html?" + parameters.toString();
   } catch (err) {
     console.error("Could not save quiz completion:", err);
     submitBtn.disabled = false;

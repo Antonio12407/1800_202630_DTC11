@@ -17,7 +17,7 @@ class SiteNavbar extends HTMLElement {
                 <!-- Left side: logo + app name, then Home -->
                 <div class="d-flex align-items-center gap-4">
                     <a class="navbar-brand d-flex align-items-center gap-3 m-0" href="#">
-                        <img src="./images/quaggle-quagga-transparent.png" alt="Quaggle logo" width="80" height="70">
+                        <img src="./images/quagga_logo.png" alt="Quaggle logo" width="80" height="62">
                         <span class="fw-bold"
                             style="font-family: 'Bricolage Grotesque', Helvetica, sans-serif; font-size: 34px; letter-spacing: -1px;">Quaggle</span>
                     </a>
