@@ -1,6 +1,11 @@
 // src/quizHistory.js
 // Quiz history stored in Firestore (NOT in the browser):
 //   users/{uid}/quizHistory/{YYYY-MM-DD_quizId}
+//
+// Each entry holds the score, the completion date, and the answers
+// the user selected:
+//   answers: [{ questionNumber, question, selected, selectedText,
+//               correctAnswer, isCorrect }, ...]
 
 import { db } from "./firebaseConfig.js";
 import {
@@ -15,9 +20,10 @@ import {
 } from "firebase/firestore";
 import { getTodayDate } from "./streak.js";
 
-// Save one completed quiz. Returns true if saved, false if this
-// quiz was already saved today (the first result is kept).
-export async function saveQuizResult(user, { quizId, score, total }) {
+// Save one completed quiz with the user's selected answers.
+// Returns true if saved, false if this quiz was already saved today
+// (the first result is kept).
+export async function saveQuizResult(user, { quizId, score, total, answers = [] }) {
   if (!user) {
     throw new Error("Please sign in first.");
   }
@@ -40,6 +46,16 @@ export async function saveQuizResult(user, { quizId, score, total }) {
     score: score,
     total: total,
     percentage: total > 0 ? Math.round((score / total) * 100) : 0,
+    answers: answers.map(function (answer) {
+      return {
+        questionNumber: answer.questionNumber,
+        question: answer.question,
+        selected: answer.selected,
+        selectedText: answer.selectedText,
+        correctAnswer: answer.correctAnswer,
+        isCorrect: answer.isCorrect,
+      };
+    }),
     completedDate: completedDate,
     completedAt: serverTimestamp(),
   });
@@ -66,6 +82,7 @@ export async function getQuizHistory(user) {
       score: data.score,
       total: data.total,
       percentage: data.percentage,
+      answers: data.answers || [], // older entries were saved without answers
       completedDate: data.completedDate,
       completedAt: data.completedAt ? data.completedAt.toDate() : null,
     };

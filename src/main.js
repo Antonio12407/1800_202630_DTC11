@@ -12,6 +12,9 @@ const nameEl = document.getElementById("name-goes-here");
 const streakEl = document.getElementById("streak-count");
 const startBtn = document.getElementById("start-quiz");
 
+// Keep Start Quiz disabled until the saved completion date is checked.
+startBtn.disabled = true;
+
 // Start Quiz goes to the first question.
 startBtn.addEventListener("click", function () {
   location.href = "quiz.html";
@@ -42,8 +45,13 @@ onAuthReady(async function (user) {
     // across tabs and devices and unlocks again tomorrow.
     if (completedToday) {
       lockStartButton();
+    } else {
+      startBtn.disabled = false;
     }
   } catch (error) {
+    // Don't block the quiz if Firestore can't be reached;
+    // submitting still won't count the same day twice.
     console.error("Could not load streak:", error);
+    startBtn.disabled = false;
   }
 });
