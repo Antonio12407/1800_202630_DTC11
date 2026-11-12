@@ -46,10 +46,10 @@ class SiteNavbar extends HTMLElement {
         <nav class="navbar bg-secondary-subtle fixed-bottom d-md-none">
             <div class="container-fluid flex-nowrap gap-3">
 
-                <div class="text-dark text-center flex-fill">
+                <a href="main.html" class="text-dark text-decoration-none text-center flex-fill">
                     <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
                     <small class="d-block">Home</small>
-                </div>
+                </a>
 
                 <div id="authControls" class="text-center flex-fill"></div>
 
