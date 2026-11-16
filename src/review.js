@@ -21,6 +21,21 @@ onAuthReady((user) => {
   checkDailyQuizLimit(user);
 });
 
+// How many questions the quiz has (quiz.js puts it in the URL).
+const totalQuestions = Number(parameters.get("total")) || 3;
+
+// Make one question box per question, copied from the template box.
+const templateBox = document.querySelector(".question-box");
+
+for (let number = 2; number <= totalQuestions; number++) {
+  const box = templateBox.cloneNode(true);
+  box.querySelector("h2").textContent = "Question " + number;
+  templateBox.parentNode.insertBefore(
+    box,
+    document.querySelector(".submit-container")
+  );
+}
+
 // Display the answers selected by the user.
 const questionBoxes = document.querySelectorAll(".question-box");
 
@@ -77,10 +92,10 @@ questionBoxes.forEach(function (box, index) {
 submitBtn?.addEventListener("click", async () => {
   if (!currentUser) return; // auth not ready yet
 
-  // Check that all three questions have been answered.
-  for (let i = 1; i <= 3; i++) {
+  // Check that every question has been answered.
+  for (let i = 1; i <= totalQuestions; i++) {
     if (!parameters.get("answer" + i)) {
-      alert("Please answer all three questions before submitting.");
+      alert("Please answer all " + totalQuestions + " questions before submitting.");
       return;
     }
   }

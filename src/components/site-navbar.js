@@ -30,6 +30,11 @@ class SiteNavbar extends HTMLElement {
 
                 <!-- Right side: Profile and Settings -->
                 <div class="d-flex align-items-center gap-4">
+                    <a href="profile.html" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                        <span class="fs-5">Profile</span>
+                        <i class="bi bi-person-circle fs-1" aria-hidden="true"></i>
+                    </a>
+
                     <div id="authControlsDesktop"></div>
 
                     <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
@@ -50,6 +55,11 @@ class SiteNavbar extends HTMLElement {
                     <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
                     <small class="d-block">Home</small>
                 </div>
+
+                <a href="profile.html" class="text-dark text-decoration-none text-center flex-fill">
+                    <i class="bi bi-person-circle fs-1" aria-hidden="true"></i>
+                    <small class="d-block">Profile</small>
+                </a>
 
                 <div id="authControls" class="text-center flex-fill"></div>
 

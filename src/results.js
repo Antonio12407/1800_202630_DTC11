@@ -11,13 +11,12 @@
 // selected answers) without re-reading the page.
 // -------------------------------------------------------------
 
-import { db } from "./firebaseConfig.js";
-import { collection, getDocs } from "firebase/firestore";
+import { getTodaysQuizId, getQuiz } from "./quizzes.js";
 
-// The answer the user picked for a question, e.g. "B. Option 2", or null.
+const parameters = new URLSearchParams(window.location.search);
+
+// The answer the user picked for a question, e.g. "B. The address ...", or null.
 function getSelectedAnswer(questionNumber) {
-    const parameters = new URLSearchParams(window.location.search);
-
     return parameters.get("answer" + questionNumber) ||
         sessionStorage.getItem("question" + questionNumber + "Answer");
 }
@@ -28,40 +27,15 @@ async function showResults() {
     const status = document.getElementById("status");
 
     try {
-        // Retrieve the quiz from Firestore.
-        const quizSnapshot = await getDocs(
-            collection(db, "Quizzes")
-        );
-
-        // Our current test database contains one quiz.
-        if (quizSnapshot.size !== 1) {
-            throw new Error("Expected one quiz in the database.");
-        }
-
-        const quizId = quizSnapshot.docs[0].id;
-
-        // Retrieve the questions belonging to the quiz.
-        const questionsSnapshot = await getDocs(
-            collection(db, "Quizzes", quizId, "question")
-        );
-
-        if (questionsSnapshot.empty) {
-            throw new Error("No questions found.");
-        }
+        // Score the quiz the user actually took (quiz.js puts its id in
+        // the URL), falling back to today's quiz.
+        const quizId = parameters.get("quiz") || await getTodaysQuizId();
+        const quiz = await getQuiz(quizId);
 
         // One entry per question: what the user picked and whether it was right.
-        const answers = [];
-
-        questionsSnapshot.forEach((question) => {
-            const data = question.data();
-
-            // Temporary matching using sample question numbers.
-            const match = data.details.match(/^Sample question (\d+)$/);
-            if (!match) {
-                throw new Error("Invalid sample question number.");
-            }
-
-            const questionNumber = Number(match[1]);
+        // Questions are already in display order, so question 1 is index 0.
+        const answers = quiz.questions.map((question, index) => {
+            const questionNumber = index + 1;
             const userAnswer = getSelectedAnswer(questionNumber);
 
             if (!userAnswer) {
@@ -69,20 +43,17 @@ async function showResults() {
             }
 
             const selected = userAnswer.trim()[0].toUpperCase();
-            const correctAnswer = data.answer.toUpperCase();
+            const correctAnswer = question.answer.toUpperCase();
 
-            answers.push({
+            return {
                 questionNumber: questionNumber,
-                question: data.details,
+                question: question.details,
                 selected: selected,                // e.g. "B"
-                selectedText: userAnswer.trim(),   // e.g. "B. Option 2"
+                selectedText: userAnswer.trim(),   // e.g. "B. The address ends ..."
                 correctAnswer: correctAnswer,
                 isCorrect: selected === correctAnswer
-            });
+            };
         });
-
-        // Keep the answers in question order.
-        answers.sort((a, b) => a.questionNumber - b.questionNumber);
 
         const total = answers.length;
         const score = answers.filter((answer) => answer.isCorrect).length;
