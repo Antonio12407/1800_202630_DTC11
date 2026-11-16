@@ -9,8 +9,10 @@
 import { onAuthReady, logoutUser } from "/src/authentication.js";
 import { getStreakData } from "/src/streak.js";
 import { copyToClipboard } from "/src/clipboard.js";
+import { getCompletedQuizCount } from "/src/quizHistory.js";
 
 const nameEl = document.getElementById("profile-name");
+const quizCountEl = document.getElementById("profile-quiz-count");
 const emailEl = document.getElementById("profile-email");
 const streakEl = document.getElementById("profile-streak");
 const unitEl = document.getElementById("profile-streak-unit");
@@ -50,7 +52,8 @@ function shareMessage(streak) {
 shareBtn.addEventListener("click", async function () {
   try {
     await copyToClipboard(shareMessage(currentStreak));
-    statusEl.textContent = "Copied! Paste it anywhere to share your streak.";
+    statusEl.textContent =
+      "Streak copied to clipboard! Paste it anywhere to share your score.";
   } catch (error) {
     console.error("Could not copy streak:", error);
     statusEl.textContent = "Couldn't copy automatically. Please try again.";
@@ -79,4 +82,12 @@ onAuthReady(async function (user) {
   streakEl.textContent = currentStreak;
   unitEl.textContent = currentStreak === 1 ? "day" : "days";
   shareBtn.disabled = false;
+
+  // Total quizzes completed, from the user's quiz history.
+  try {
+    quizCountEl.textContent = await getCompletedQuizCount(user);
+  } catch (error) {
+    console.error("Could not load quiz count:", error);
+    quizCountEl.textContent = "–";
+  }
 });
