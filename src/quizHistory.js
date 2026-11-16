@@ -17,6 +17,7 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  getCountFromServer,
 } from "firebase/firestore";
 import { getTodayDate } from "./streak.js";
 
@@ -61,6 +62,19 @@ export async function saveQuizResult(user, { quizId, score, total, answers = [] 
   });
 
   return true;
+}
+
+// How many quizzes the user has completed (one history entry per quiz).
+// Asks Firestore for the count only, without downloading every entry.
+export async function getCompletedQuizCount(user) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const snapshot = await getCountFromServer(
+    collection(db, "users", user.uid, "quizHistory")
+  );
+  return snapshot.data().count;
 }
 
 // Load the user's history, most recent first.
