@@ -2,11 +2,13 @@
 // -------------------------------------------------------------
 // Runs on profile.html. Shows the logged-in user's name, email and
 // current streak, and the "Share my streak" button copies a short
-// message with the streak to the clipboard.
+// message with the streak to the clipboard. The Log out button is
+// here (not in the navbar).
 // -------------------------------------------------------------
 
-import { onAuthReady } from "/src/authentication.js";
+import { onAuthReady, logoutUser } from "/src/authentication.js";
 import { getStreakData } from "/src/streak.js";
+import { copyToClipboard } from "/src/clipboard.js";
 
 const nameEl = document.getElementById("profile-name");
 const emailEl = document.getElementById("profile-email");
@@ -14,41 +16,35 @@ const streakEl = document.getElementById("profile-streak");
 const unitEl = document.getElementById("profile-streak-unit");
 const shareBtn = document.getElementById("share-streak");
 const statusEl = document.getElementById("share-status");
+const logoutBtn = document.getElementById("logout-button");
+const logoutStatusEl = document.getElementById("logout-status");
 
 let currentStreak = 0;
+let loggingOut = false;
 
-// The text that gets copied, e.g. "I'm on a 5-day streak on Quaggle! ..."
+// Log out: signs out of Firebase, then logoutUser() goes to index.html.
+logoutBtn.addEventListener("click", async function () {
+  loggingOut = true;
+  logoutBtn.disabled = true;
+  logoutStatusEl.textContent = "";
+
+  try {
+    await logoutUser();
+  } catch (error) {
+    console.error("Could not log out:", error);
+    loggingOut = false;
+    logoutBtn.disabled = false;
+    logoutStatusEl.textContent = "Couldn't log out. Please try again.";
+  }
+});
+
+// The text that gets copied, e.g. "I'm on a 5-day streak on Quaggle!"
 function shareMessage(streak) {
   if (streak === 0) {
-    return "I'm starting my Quaggle streak! Learning to spot misinformation, one daily quiz at a time.";
+    return "I'm starting my Quaggle streak!";
   }
 
-  const days = streak === 1 ? "1-day" : streak + "-day";
-  return "I'm on a " + days + " streak on Quaggle! Learning to spot misinformation, one daily quiz at a time.";
-}
-
-// Copy text to the clipboard. Uses the Clipboard API, with a fallback
-// for browsers or pages where it isn't available (e.g. plain http).
-async function copyToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.setAttribute("readonly", "");
-  textArea.style.position = "fixed";
-  textArea.style.opacity = "0";
-  document.body.appendChild(textArea);
-  textArea.select();
-
-  const copied = document.execCommand("copy");
-  textArea.remove();
-
-  if (!copied) {
-    throw new Error("Copy command was blocked.");
-  }
+  return "I'm on a " + streak + "-day streak on Quaggle!";
 }
 
 shareBtn.addEventListener("click", async function () {
@@ -62,9 +58,10 @@ shareBtn.addEventListener("click", async function () {
 });
 
 onAuthReady(async function (user) {
-  // The profile belongs to a logged-in user.
+  // The profile belongs to a logged-in user. (While logging out,
+  // logoutUser() handles the redirect to index.html instead.)
   if (!user) {
-    location.href = "login.html";
+    if (!loggingOut) location.href = "login.html";
     return;
   }
 

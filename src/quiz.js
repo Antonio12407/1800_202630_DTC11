@@ -45,7 +45,8 @@ async function loadQuiz() {
         document.getElementById("question-source").hidden = true;
         document.getElementById("question-prompt").hidden = true;
 
-        // Display an image if one exists.
+        // Display an image only if the question has one
+        // (the box is hidden by default in quiz.html).
         const questionImage = document.querySelector(".image-placeholder");
 
         if (questionImage) {

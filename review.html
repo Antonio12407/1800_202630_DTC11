@@ -127,8 +127,14 @@
       }
 
       @media (max-width: 575.98px) {
+        /* Phones: fill the whole screen edge to edge, no card frame. */
         .quiz-container {
-          border-radius: 16px;
+          width: 100%;
+          max-width: none;
+          margin: 0 !important;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none !important;
         }
 
         .review-header {

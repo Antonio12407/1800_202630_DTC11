@@ -42,9 +42,16 @@
             </div>
 
             <p id="status"></p>
+
+            <!-- Copies the score to the clipboard (src/shareResults.js) -->
+            <button type="button" id="share-score" class="back-button mb-2" disabled>
+                Share my score
+            </button>
+            <p id="share-status" class="text-center small" role="status" aria-live="polite"></p>
+
             <a href="history.html" class="back-button mb-2">View Quiz History</a>
             <a href="main.html" class="back-button">
-                Back to Dashboard
+                Back to Home
             </a>
 
         </section>
@@ -53,6 +60,7 @@
 
     <script type="module" src="/src/results.js"></script>
     <script type="module" src="/src/saveHistory.js"></script>
+    <script type="module" src="/src/shareResults.js"></script>
 
 </body>
 
