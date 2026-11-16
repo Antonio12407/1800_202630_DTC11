@@ -1,8 +1,7 @@
 
-import { db } from "./firebaseConfig.js";
-import { collection, getDocs } from "firebase/firestore";
 import { onAuthReady } from "./authentication.js";
 import { checkDailyQuizLimit } from "./streak.js";
+import { getTodaysQuizId, getQuiz } from "./quizzes.js";
 
 // One quiz per day: redirects if today's quiz is already done
 // (or to login if signed out). Uses the saved Firestore date.
@@ -12,56 +11,18 @@ async function loadQuiz() {
     const answerButtons = document.querySelectorAll(".answer-button");
 
     try {
-        // Retrieve the quizzes from Firestore.
-        const quizSnapshot = await getDocs(
-            collection(db, "Quizzes")
-        );
-
-        if (quizSnapshot.empty) {
-            throw new Error("No quizzes found.");
-        }
-
-        // Get the first quiz's ID.
-        const quizId = quizSnapshot.docs[0].id;
-
-        // Retrieve the questions from the quiz.
-        const questionsSnapshot = await getDocs(
-            collection(db, "Quizzes", quizId, "question")
-        );
-
-        if (questionsSnapshot.empty) {
-            throw new Error("No questions found.");
-        }
-
-        // Store the questions in an array.
-        const questions = [];
-
-        questionsSnapshot.forEach(function (item) {
-            const data = item.data();
-
-            questions.push({
-                id: item.id,
-                details: data.details,
-                M_C: data.M_C,
-                img: data.img
-            });
-        });
-
-        // Sort the sample questions by their numbers.
-        questions.sort(function (a, b) {
-            const numberA = Number(
-                a.details.replace("Sample question ", "")
-            );
-
-            const numberB = Number(
-                b.details.replace("Sample question ", "")
-            );
-
-            return numberA - numberB;
-        });
-
-        // Get the question number and answers from the URL.
+        // The URL carries the quiz state between pages:
+        //   quiz=<quiz id>, total=<question count>, answer1, answer2, ...
         const parameters = new URLSearchParams(window.location.search);
+
+        // Keep the quiz the user started, even if midnight passes;
+        // otherwise start today's quiz.
+        const quizId = parameters.get("quiz") || await getTodaysQuizId();
+        const quiz = await getQuiz(quizId);
+        const questions = quiz.questions;
+
+        parameters.set("quiz", quizId);
+        parameters.set("total", String(questions.length));
 
         let questionNumber = Number(parameters.get("question"));
 
@@ -84,7 +45,8 @@ async function loadQuiz() {
         document.getElementById("question-source").hidden = true;
         document.getElementById("question-prompt").hidden = true;
 
-        // Display an image if one exists.
+        // Display an image only if the question has one
+        // (the box is hidden by default in quiz.html).
         const questionImage = document.querySelector(".image-placeholder");
 
         if (questionImage) {
