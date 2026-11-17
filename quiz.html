@@ -28,6 +28,16 @@
   <site-navbar></site-navbar>
   <main class="container quiz-container px-0 my-4 shadow-sm">
     <section class="question-container p-3" aria-labelledby="question-title">
+      <!-- Progress Bar -->
+      <p id="progress-label" class="d-none small text-secondary mb-2">
+        Loading...
+      </p>
+
+      <div id="quiz-progress" class="progress mb-4" role="progressbar" aria-label="Quiz progress" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="100">
+        <div id="progress-bar" class="progress-bar bg-secondary" style="width: 0%"></div>
+      </div>
+
       <h1 id="question-title" class="mb-3">Loading question...</h1>
 
       <p id="question-source" class="text-break"></p>
@@ -39,6 +49,17 @@
         <p id="question-description"></p>
 
         <p id="question-prompt" class="mb-0"></p>
+
+        <!-- Zoom buttons -->
+        <div class="d-flex align-items-center justify-content-start gap-2 border-bottom">
+          <button type="button" id="zoom-out-btn" class="btn btn-outline-secondary" aria-label="Smaller text">
+            <i class="bi bi-zoom-out" aria-hidden="true"></i>
+          </button>
+          <span id="zoom-label" class="text-secondary text-center px-2" aria-live="polite">100%</span>
+          <button type="button" id="zoom-in-btn" class="btn btn-outline-secondary" aria-label="Larger text">
+            <i class="bi bi-zoom-in" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -61,19 +82,13 @@
         </div>
       </div>
 
-      <p id="progress-label" class="small text-secondary mt-4 mb-2">
-        Loading...
-      </p>
-
-      <div id="quiz-progress" class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0"
-        aria-valuemin="0" aria-valuemax="100">
-        <div id="progress-bar" class="progress-bar bg-secondary" style="width: 0%"></div>
-      </div>
+      
     </section>
   </main>
 
   <script type="module" src="./src/quiz.js"></script>
   <script type="module" src="./src/quizProgress.js"></script>
+  <script type="module" src="./src/zoomTool.js"></script>
 </body>
 
 </html>
