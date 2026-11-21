@@ -34,7 +34,7 @@ class SiteNavbar extends HTMLElement {
                         <i class="bi bi-person-circle fs-1" aria-hidden="true"></i>
                     </a>
 
-                    <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                    <a href="settings.html" class="text-dark text-decoration-none d-flex align-items-center gap-2">
                         <span class="fs-5">Settings</span>
                         <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
                     </a>
@@ -58,7 +58,7 @@ class SiteNavbar extends HTMLElement {
                     <small class="d-block">Profile</small>
                 </a>
 
-                <a href="#" class="text-dark text-decoration-none text-center flex-fill">
+                <a href="settings.html" class="text-dark text-decoration-none text-center flex-fill">
                     <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
                     <small class="d-block">Settings</small>
                 </a>
