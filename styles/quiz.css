@@ -90,10 +90,14 @@ body {
 }
 
 @media (max-width: 575.98px) {
+    /* Phones: fill the whole screen edge to edge, no card frame. */
     .quiz-container {
-        width: calc(100% - 24px);
-        margin: 16px auto;
-        border-radius: 16px;
+        width: 100%;
+        max-width: none;
+        margin: 0 !important;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none !important;
     }
 
     .question-container {
@@ -118,5 +122,15 @@ body {
         min-height: 65px;
         padding: 12px;
         font-size: 1.05rem;
+    }
+}
+body {
+    padding-top: 105px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 0;
+        padding-bottom: 120px;
     }
 }
