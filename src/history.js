@@ -36,6 +36,9 @@ function renderEntry(entry) {
   badge.textContent = entry.percentage + "%";
 
   item.append(info, badge);
+    item.addEventListener("click", function () {
+    location.href = "history-detail.html?id=" + entry.id;
+  });
   return item;
 }
 

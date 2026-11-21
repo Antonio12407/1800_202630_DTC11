@@ -75,10 +75,13 @@ body {
 }
 
 @media (max-width: 575.98px) {
+    /* Phones: fill the whole screen edge to edge, no card frame. */
     .review-container {
-        width: calc(100% - 24px);
-        margin: 16px auto;
-        border-radius: 16px;
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .review-header,
