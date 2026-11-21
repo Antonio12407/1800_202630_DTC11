@@ -129,7 +129,7 @@ async function loadQuiz() {
 
         // Calculate the quiz progress.
         const percentage = Math.round(
-            (questionNumber / questions.length) * 100
+            ((questionNumber - 1) / questions.length) * 100
         );
 
         // Display the current progress.
