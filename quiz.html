@@ -21,13 +21,16 @@
   <link href="styles/colors.css" rel="stylesheet" />
   <link href="styles/quiz.css" rel="stylesheet" />
 
-    <script type="module" src="/src/components/site-navbar.js"></script>
-  </head>
+  <script type="module" src="/src/components/site-navbar.js"></script>
+</head>
 
 <body class="bg-light">
   <site-navbar></site-navbar>
+
   <main class="container quiz-container px-0 my-4 shadow-sm">
-    <section class="question-container p-3" aria-labelledby="question-title">
+
+    <section class="question-container" aria-labelledby="question-title">
+
       <!-- Progress Bar -->
       <p id="progress-label" class="d-none small text-secondary mb-2">
         Loading...
@@ -38,32 +41,40 @@
         <div id="progress-bar" class="progress-bar bg-secondary" style="width: 0%"></div>
       </div>
 
-      <h1 id="question-title" class="mb-3">Loading question...</h1>
+      <!-- Question heading and zoom controls -->
+      <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+        <h1 id="question-title" class="mb-0">Loading question...</h1>
+
+        <div class="quiz-zoom-controls d-flex align-items-center gap-2">
+          <button type="button" id="zoom-out-btn" class="btn quiz-zoom-btn" aria-label="Smaller text">
+            <i class="bi bi-dash-lg" aria-hidden="true"></i>
+          </button>
+
+          <span id="zoom-label" class="quiz-zoom-label text-center" aria-live="polite">
+            100%
+          </span>
+
+          <button type="button" id="zoom-in-btn" class="btn quiz-zoom-btn" aria-label="Larger text">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
 
       <p id="question-source" class="text-break"></p>
 
       <div class="clearfix">
-        <!-- Only shown when a question has an image (its img field); quiz.js reveals it -->
+        <!-- Only shown when a question has an image -->
         <div class="image-placeholder" role="img" aria-label="Question image" hidden></div>
 
         <p id="question-description"></p>
 
         <p id="question-prompt" class="mb-0"></p>
-
-        <!-- Zoom buttons -->
-        <div class="d-flex align-items-center justify-content-start gap-2 border-bottom">
-          <button type="button" id="zoom-out-btn" class="btn btn-outline-secondary" aria-label="Smaller text">
-            <i class="bi bi-zoom-out" aria-hidden="true"></i>
-          </button>
-          <span id="zoom-label" class="text-secondary text-center px-2" aria-live="polite">100%</span>
-          <button type="button" id="zoom-in-btn" class="btn btn-outline-secondary" aria-label="Larger text">
-            <i class="bi bi-zoom-in" aria-hidden="true"></i>
-          </button>
-        </div>
       </div>
+
     </section>
 
-    <section class="bg-white p-3" aria-label="Answer choices">
+    <!-- Answer choices -->
+    <section class="answer-choices" aria-label="Answer choices">
       <div class="row g-3">
         <div class="col-12 col-md-6">
           <button type="button" class="btn answer-button w-100 h-100"></button>
@@ -81,9 +92,8 @@
           <button type="button" class="btn answer-button w-100 h-100"></button>
         </div>
       </div>
-
-      
     </section>
+
   </main>
 
   <script type="module" src="./src/quiz.js"></script>
