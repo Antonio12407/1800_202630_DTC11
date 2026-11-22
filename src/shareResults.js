@@ -1,21 +1,12 @@
 // src/shareResults.js
 // -------------------------------------------------------------
-// Add-on for results.html. Once results.js has scored the quiz, the
-// "Share my score" button copies a short message with the score to
-// the clipboard, e.g. "I scored 4/5 (80%) on today's Quaggle quiz!"
+// Copies quiz results to the clipboard and displays a popup.
 // -------------------------------------------------------------
 
-import { resultsReady } from "/src/results.js";
-import { copyToClipboard } from "/src/clipboard.js";
+import { resultsReady } from "./results.js";
+import { copyToClipboard } from "./clipboard.js";
 
 const shareBtn = document.getElementById("share-score");
-const statusEl = document.getElementById("share-status");
-
-// The text that gets copied.
-function shareMessage({ score, total }) {
-  const percentage = Math.round((score / total) * 100);
-  return "I scored " + score + "/" + total + " (" + percentage + "%) on today's Quaggle quiz!";
-}
 
 const result = await resultsReady;
 
@@ -23,16 +14,30 @@ if (result) {
   shareBtn.disabled = false;
 
   shareBtn.addEventListener("click", async function () {
+    const message =
+      "I scored " + result.score + "/" + result.total +
+      " on today's Quaggle quiz!";
+
     try {
-      await copyToClipboard(shareMessage(result));
-      statusEl.textContent = "Results copied to clipboard! Paste it anywhere to share your score.";
+      await copyToClipboard(message);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Copied to clipboard!",
+        text: "Your quiz results are ready to share!",
+        timer: 2000,
+        showConfirmButton: false
+      });
+
     } catch (error) {
-      console.error("Could not copy score:", error);
-      statusEl.textContent = "Couldn't copy automatically. Please try again.";
+      console.error("Could not copy results:", error);
+
+      await Swal.fire({
+        icon: "error",
+        title: "Copy failed",
+        text: "Couldn't copy your results. Please try again.",
+        confirmButtonText: "OK"
+      });
     }
   });
-} else {
-  // results.js couldn't score the quiz (it shows its own error),
-  // so there is no score to share.
-  shareBtn.hidden = true;
 }

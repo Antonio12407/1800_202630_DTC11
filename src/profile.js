@@ -18,7 +18,6 @@ const emailEl = document.getElementById("profile-email");
 const streakEl = document.getElementById("profile-streak");
 const unitEl = document.getElementById("profile-streak-unit");
 const shareBtn = document.getElementById("share-streak");
-const statusEl = document.getElementById("share-status");
 const logoutBtn = document.getElementById("logout-button");
 const logoutStatusEl = document.getElementById("logout-status");
 const badgeListEl = document.getElementById("badge-list");
@@ -54,11 +53,24 @@ function shareMessage(streak) {
 shareBtn.addEventListener("click", async function () {
   try {
     await copyToClipboard(shareMessage(currentStreak));
-    statusEl.textContent =
-      "Streak copied to clipboard! Paste it anywhere to share your score.";
+
+    await Swal.fire({
+      icon: "success",
+      title: "Copied to clipboard!",
+      text: "Your streak is ready to share!",
+      timer: 2000,
+      showConfirmButton: false
+    });
+
   } catch (error) {
     console.error("Could not copy streak:", error);
-    statusEl.textContent = "Couldn't copy automatically. Please try again.";
+
+    await Swal.fire({
+      icon: "error",
+      title: "Copy failed",
+      text: "Couldn't copy your streak. Please try again.",
+      confirmButtonText: "OK"
+    });
   }
 });
 
@@ -85,7 +97,7 @@ onAuthReady(async function (user) {
   unitEl.textContent = currentStreak === 1 ? "day" : "days";
   shareBtn.disabled = false;
 
-    // Total quizzes completed, from the user's quiz history.
+  // Total quizzes completed, from the user's quiz history.
   let completed = null;
   try {
     completed = await getCompletedQuizCount(user);

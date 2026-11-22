@@ -2,10 +2,10 @@
 
 const MIN = 0.8; // 80%
 const MAX = 2.0; // 200%
-const STEP = 0.2;
+const STEP = 0.1;
 
 const textElements = document.querySelectorAll(
-  "#question-title, #question-source, #question-description, #question-prompt"
+  "#question-source, #question-description, #question-prompt"
 );
 const zoomIn = document.getElementById("zoom-in-btn");
 const zoomOut = document.getElementById("zoom-out-btn");
