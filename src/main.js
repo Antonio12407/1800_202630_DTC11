@@ -43,7 +43,9 @@ async function refreshStreak() {
 
   try {
     const { currentStreak, completedToday } = await getStreakData(currentUser);
-    streakEl.textContent = currentStreak;
+    if (streakEl) {
+      streakEl.textContent = currentStreak;
+    }
 
     // One quiz per day: the saved date decides, so this works
     // across tabs and devices and unlocks again tomorrow.
