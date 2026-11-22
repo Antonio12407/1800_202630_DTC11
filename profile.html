@@ -41,10 +41,19 @@
       <h1 class="fw-bolder text-body-emphasis">Your Profile</h1>
 
       <!-- Name and email -->
-      <div class="mt-4 p-4 border border-2 rounded-4 shadow-sm">
+      <div class="mt-4 p-4 border border-2 rounded-4 shadow-sm d-flex justify-content-around align-items-center">
+        <div>
         <i class="bi bi-person-circle display-3" aria-hidden="true" style="color: #6b4226"></i>
         <h2 id="profile-name" class="h3 fw-bold mt-2 mb-1">Loading...</h2>
         <p id="profile-email" class="mb-0 text-secondary"></p>
+        </div>
+        <div class="">
+        <p class="mb-1 fs-5">Quizzes completed</p>
+        <p class="display-4 fw-bold mb-0" style="color: #6b4226">
+          <i class="bi bi-check2-circle" aria-hidden="true"></i>
+          <span id="profile-quiz-count">0</span>
+        </p>
+      </div>
       </div>
 
       <!-- Current streak + share -->
@@ -70,13 +79,7 @@
       </div>
 
       <!-- Quizzes completed (counted from the user's quiz history) -->
-      <div class="mt-4 p-4 border border-2 rounded-4 shadow-sm">
-        <p class="mb-1 fs-5">Quizzes completed</p>
-        <p class="display-4 fw-bold mb-0" style="color: #6b4226">
-          <i class="bi bi-check2-circle" aria-hidden="true"></i>
-          <span id="profile-quiz-count">0</span>
-        </p>
-      </div>
+      
 
       <!-- Badges -->
       <div class="mt-4 p-4 border border-2 rounded-4 shadow-sm">
