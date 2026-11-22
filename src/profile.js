@@ -9,7 +9,8 @@
 import { onAuthReady, logoutUser } from "/src/authentication.js";
 import { getStreakData } from "/src/streak.js";
 import { copyToClipboard } from "/src/clipboard.js";
-import { getCompletedQuizCount } from "/src/quizHistory.js";
+import { getCompletedQuizCount, getPerfectQuizCount } from "/src/quizHistory.js";
+import { getBadges, renderBadges } from "/src/badges.js";
 
 const nameEl = document.getElementById("profile-name");
 const quizCountEl = document.getElementById("profile-quiz-count");
@@ -20,6 +21,7 @@ const shareBtn = document.getElementById("share-streak");
 const statusEl = document.getElementById("share-status");
 const logoutBtn = document.getElementById("logout-button");
 const logoutStatusEl = document.getElementById("logout-status");
+const badgeListEl = document.getElementById("badge-list");
 
 let currentStreak = 0;
 let loggingOut = false;
@@ -83,11 +85,24 @@ onAuthReady(async function (user) {
   unitEl.textContent = currentStreak === 1 ? "day" : "days";
   shareBtn.disabled = false;
 
-  // Total quizzes completed, from the user's quiz history.
+    // Total quizzes completed, from the user's quiz history.
+  let completed = null;
   try {
-    quizCountEl.textContent = await getCompletedQuizCount(user);
+    completed = await getCompletedQuizCount(user);
+    quizCountEl.textContent = completed;
   } catch (error) {
     console.error("Could not load quiz count:", error);
     quizCountEl.textContent = "–";
+  }
+
+  // Badges are worked out from the same history (count + perfect scores).
+  try {
+    const perfect = await getPerfectQuizCount(user);
+    if (completed === null) completed = await getCompletedQuizCount(user);
+
+    renderBadges(badgeListEl, getBadges({ completed, perfect }));
+  } catch (error) {
+    console.error("Could not load badges:", error);
+    badgeListEl.textContent = "Couldn't load your badges. Please refresh and try again.";
   }
 });

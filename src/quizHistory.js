@@ -16,6 +16,7 @@ import {
   getDocs,
   query,
   orderBy,
+  where,
   serverTimestamp,
   getCountFromServer,
 } from "firebase/firestore";
@@ -73,6 +74,21 @@ export async function getCompletedQuizCount(user) {
 
   const snapshot = await getCountFromServer(
     collection(db, "users", user.uid, "quizHistory")
+  );
+  return snapshot.data().count;
+}
+
+// How many quizzes the user has finished with a perfect score (100%).
+export async function getPerfectQuizCount(user) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const snapshot = await getCountFromServer(
+    query(
+      collection(db, "users", user.uid, "quizHistory"),
+      where("percentage", "==", 100)
+    )
   );
   return snapshot.data().count;
 }
