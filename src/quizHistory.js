@@ -1,12 +1,3 @@
-// src/quizHistory.js
-// Quiz history stored in Firestore (NOT in the browser):
-//   users/{uid}/quizHistory/{YYYY-MM-DD_quizId}
-//
-// Each entry holds the score, the completion date, and the answers
-// the user selected:
-//   answers: [{ questionNumber, question, selected, selectedText,
-//               correctAnswer, isCorrect }, ...]
-
 import { db } from "./firebaseConfig.js";
 import {
   collection,
@@ -22,9 +13,6 @@ import {
 } from "firebase/firestore";
 import { getTodayDate } from "./streak.js";
 
-// Save one completed quiz with the user's selected answers.
-// Returns true if saved, false if this quiz was already saved today
-// (the first result is kept).
 export async function saveQuizResult(user, { quizId, score, total, answers = [] }) {
   if (!user) {
     throw new Error("Please sign in first.");
@@ -65,8 +53,6 @@ export async function saveQuizResult(user, { quizId, score, total, answers = [] 
   return true;
 }
 
-// How many quizzes the user has completed (one history entry per quiz).
-// Asks Firestore for the count only, without downloading every entry.
 export async function getCompletedQuizCount(user) {
   if (!user) {
     throw new Error("Please sign in first.");
@@ -78,7 +64,6 @@ export async function getCompletedQuizCount(user) {
   return snapshot.data().count;
 }
 
-// How many quizzes the user has finished with a perfect score (100%).
 export async function getPerfectQuizCount(user) {
   if (!user) {
     throw new Error("Please sign in first.");
@@ -93,7 +78,6 @@ export async function getPerfectQuizCount(user) {
   return snapshot.data().count;
 }
 
-// Load the user's history, most recent first.
 export async function getQuizHistory(user) {
   if (!user) {
     throw new Error("Please sign in first.");
@@ -117,4 +101,29 @@ export async function getQuizHistory(user) {
       completedAt: data.completedAt ? data.completedAt.toDate() : null,
     };
   });
+}
+
+export async function getQuizHistoryEntry(user, entryId) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const entrySnap = await getDoc(
+    doc(db, "users", user.uid, "quizHistory", entryId)
+  );
+
+  if (!entrySnap.exists()) {
+    return null;
+  }
+
+  const data = entrySnap.data();
+  return {
+    id: entrySnap.id,
+    quizId: data.quizId,
+    score: data.score,
+    total: data.total,
+    percentage: data.percentage,
+    answers: data.answers || [],
+    completedDate: data.completedDate,
+  };
 }
