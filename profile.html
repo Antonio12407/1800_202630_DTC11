@@ -28,12 +28,10 @@
   <script type="module" src="/src/components/site-navbar.js"></script>
 </head>
 
-<body class="pb-5 mb-5">
+<body class="page-centered">
   <site-navbar></site-navbar>
 
-  <div class="d-none d-md-block py-5"></div>
-
-  <main class="container px-3 pt-4 pb-5 text-center" style="max-width: 560px">
+  <main class="page-content container px-3 py-2 text-center" style="max-width: 560px">
     <h1 class="fw-bolder text-body-emphasis">Your Profile</h1>
 
     <!-- Name and email -->
@@ -80,13 +78,16 @@
       </div>
     </div>
 
-    <!-- Link to the user's quiz history -->
-    <a href="history.html" class="btn btn-outline-success btn-lg px-4 mt-4">Quiz History</a>
+    <!-- Quiz History + Log out, vertically centered on one row -->
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-4">
+      <!-- Link to the user's quiz history -->
+      <a href="history.html" class="btn btn-outline-success btn-lg px-4">Quiz History</a>
 
-    <!-- Log out (moved here from the navbar) -->
-    <button type="button" id="logout-button" class="btn btn-outline-secondary btn-lg px-4 mt-4">
-      <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>Log out
-    </button>
+      <!-- Log out (moved here from the navbar) -->
+      <button type="button" id="logout-button" class="btn btn-outline-secondary btn-lg px-4">
+        <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>Log out
+      </button>
+    </div>
     <p id="logout-status" class="mt-2 mb-0 small" role="status" aria-live="polite"></p>
   </main>
 

@@ -4,7 +4,7 @@
 // the quiz in Firestore and displays the result.
 //
 // The selected answers come from the URL (answer1, answer2, ... set by
-// quiz.js / review.js), or from sessionStorage as a fallback.
+// quiz.js), or from sessionStorage as a fallback.
 //
 // Exports `resultsReady`, a promise for the scored result, so
 // saveHistory.js can store exactly what was shown (including the

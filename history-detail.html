@@ -12,10 +12,10 @@
     <script type="module" src="/src/components/site-navbar.js"></script>
   </head>
 
-  <body>
+  <body class="page-centered">
     <site-navbar></site-navbar>
 
-    <main class="container history-container px-0 my-4 shadow-sm">
+    <main class="container history-container px-0 shadow-sm">
       <section class="history-header">
         <h1>Quiz Result</h1>
       </section>
@@ -24,7 +24,9 @@
         <h2 id="detail-date" class="h5"></h2>
         <p id="detail-status">Loading...</p>
         <ol id="answer-list"></ol>
-        <a href="history.html" class="btn btn-outline-success">Back to history</a>
+        <div class="text-center">
+          <a href="history.html" class="btn btn-outline-success btn-lg px-4">Back to history</a>
+        </div>
       </section>
     </main>
 

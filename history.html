@@ -14,19 +14,20 @@
 
   </head>
 
-  <body>
+  <body class="page-centered">
     <site-navbar></site-navbar>
 
-    <main class="container history-container px-0 my-4 shadow-sm">
+    <main class="container history-container px-0 shadow-sm">
       <section class="history-header">
         <h1>Quiz History</h1>
+        <p class="history-hint">Tap a quiz to see your answers</p>
       </section>
 
       <section class="history-content" aria-live="polite">
         <p id="history-status">Loading your history...</p>
         <ol id="history-list"></ol>
         <div class="text-center mt-3">
-          <a id="start-link" href="quiz.html" class="btn d-none">Start today's quiz</a>
+          <a id="start-link" href="quiz.html" class="btn btn-outline-success btn-lg px-4 d-none">Start today's quiz</a>
         </div>
       </section>
     </main>

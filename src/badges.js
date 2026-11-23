@@ -2,6 +2,8 @@
 // Profile badges. Add a new badge by adding one entry to BADGES.
 //   completed - how many quizzes the user has completed
 //   perfect   - how many of those were scored 100%
+// Each badge counts one stat towards a goal; it's earned when the
+// stat reaches the goal. `unit` labels the progress, e.g. "2 / 3 quizzes".
 
 const BADGES = [
   {
@@ -9,27 +11,41 @@ const BADGES = [
     icon: "bi-patch-check-fill",
     name: "First Quiz",
     description: "Complete 1 quiz",
-    isEarned: (stats) => stats.completed >= 1,
+    stat: "completed",
+    goal: 1,
+    unit: "quiz",
   },
   {
     id: "three-quizzes",
     icon: "bi-trophy-fill",
     name: "Quiz Regular",
     description: "Complete 3 quizzes",
-    isEarned: (stats) => stats.completed >= 3,
+    stat: "completed",
+    goal: 3,
+    unit: "quizzes",
   },
   {
     id: "perfect-score",
     icon: "bi-star-fill",
     name: "Perfect Score",
     description: "Score 100% on a quiz",
-    isEarned: (stats) => stats.perfect >= 1,
+    stat: "perfect",
+    goal: 1,
+    unit: "perfect score",
   },
 ];
 
+// Every badge with its progress:
+//   { ...badge, current, goal, earned }
+// `current` is capped at the goal (e.g. 5 quizzes shows as 3 / 3).
 export function getBadges(stats) {
   return BADGES.map(function (badge) {
-    return { ...badge, earned: badge.isEarned(stats) };
+    const value = Number(stats[badge.stat]) || 0;
+    return {
+      ...badge,
+      current: Math.min(value, badge.goal),
+      earned: value >= badge.goal,
+    };
   });
 }
 
