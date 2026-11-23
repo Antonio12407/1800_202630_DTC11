@@ -1,69 +1,131 @@
-body {
-  background-color: #faf5ee;
-  color: #3e2415;
-  padding-top: 0;
-  padding-bottom: calc(110px + env(safe-area-inset-bottom));
-}
+/* Quiz History (history.html) and Quiz Result (history-detail.html).
+   Content starts at the top of the page (not vertically centered).
+   Room for the navbars comes from the shared page-centered body class
+   in colors.css; the card has no page-content class, so it isn't centered. */
 
+/* The page card: matches the profile cards (rounded, light border,
+   beige panels). Full width minus a small gutter on phones, a centered
+   720px column on desktop. */
 main.history-container {
-  width: 100%;
-  max-width: 100% !important;
-  margin: 0 !important;
+  width: calc(100% - 1.5rem);
+  max-width: 720px !important;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 !important;
   background-color: #faf5ee;
-  border: 0;
-  border-radius: 0;
+  border: 2px solid var(--bs-border-color);
+  border-radius: 1rem;
   overflow: hidden;
 }
 
 .history-header {
   background-color: #e9dccb;
-  padding: 18px 16px;
+  padding: 1.25rem 1rem;
   text-align: center;
-  border-bottom: 2px solid #8a5a3a;
+  border-bottom: 2px solid var(--bs-border-color);
 }
 
 .history-header h1 {
-  font-size: 26px;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #6b4226;
   margin: 0;
 }
 
-.history-content {
-  background-color: #d8c2ad;
-  padding: 16px;
-  min-height: 60vh;
+/* "Tap a quiz to see your answers" under the title */
+.history-hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: #5c4a3d;
 }
 
+/* Same colour as the page, no minimum height: no stray strip below. */
+.history-content {
+  background-color: #faf5ee;
+  padding: 1rem;
+}
+
+/* ---- List of past quizzes ---- */
 #history-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
+/* Each entry is a link to its breakdown (history.js). It looks
+   clickable even without hover (phones): a brown outline, a
+   "View breakdown" label and a chevron on the right. */
 .history-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.75rem;
   background-color: #e9dccb;
   border: 2px solid #8a5a3a;
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.history-item:hover {
+  color: inherit;
+  background-color: #dfcdb6;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(62, 36, 21, 0.12);
+}
+
+.history-item:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.history-item:focus-visible {
+  outline: 3px solid #8a5a3a;
+  outline-offset: 2px;
+}
+
+/* "View breakdown ›" cue */
+.history-cta {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6b4226;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.history-side {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.history-chevron {
+  font-size: 1.25rem;
+  color: #6b4226;
+  transition: transform 0.15s;
+}
+
+.history-item:hover .history-chevron {
+  transform: translateX(3px);
 }
 
 .history-date {
   font-weight: 600;
   font-size: 0.95rem;
   line-height: 1.3;
+  color: #3e2415;
 }
 
 .history-score {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #6b4226;
   margin-top: 2px;
 }
@@ -75,48 +137,64 @@ main.history-container {
   color: #6b4226;
 }
 
-#history-status {
+/* ---- Status and empty state, centered ---- */
+#history-status,
+#detail-status {
   text-align: center;
-  margin: 24px 8px;
-  font-size: 1rem;
+  margin: 1rem 0.5rem;
+  color: #3e2415;
 }
 
-#start-link {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  font-size: 1.1rem;
-  background-color: #6b4226;
-  color: #faf5ee;
-  border-radius: 30px;
+#history-status:empty {
+  display: none;
 }
 
-#start-link:hover {
-  background-color: #3e2415;
-  color: #faf5ee;
+/* ---- Quiz Result page (history-detail.html) ---- */
+#detail-date {
+  text-align: center;
+  color: #6b4226;
+  margin: 0.25rem 0 0;
 }
 
-@media (min-width: 769px) {
-  body {
-    padding-top: 105px;
-    padding-bottom: 0;
-  }
+#answer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
 
-  main.history-container {
-    max-width: 720px !important;
-    margin: 1.5rem auto !important;
-    border: 2px solid #8a5a3a;
-    border-radius: 20px;
+.answer-card {
+  background-color: #e9dccb;
+  border: 2px solid #e9dccb;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.75rem;
+  color: #3e2415;
+}
+
+.answer-card p {
+  margin: 4px 0 0;
+}
+
+.answer-card.correct {
+  border-left: 8px solid #2e7d32;
+}
+
+.answer-card.incorrect {
+  border-left: 8px solid #b3261e;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .history-header {
+    padding: 1.5rem;
   }
 
   .history-header h1 {
-    font-size: 36px;
+    font-size: 2.25rem;
   }
 
   .history-content {
-    background-color: #d8c2ad;
-    padding: 16px;
-    min-height: calc(100vh - 70px - 110px);
+    padding: 1.5rem;
   }
 
   .history-date {
@@ -130,40 +208,4 @@ main.history-container {
   .history-percent {
     font-size: 1.6rem;
   }
-
-  #start-link {
-    display: inline-block;
-    width: auto;
-    padding: 10px 24px;
-  }
-}
-
-.history-item {
-  cursor: pointer;
-}
-
-#answer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 16px;
-}
-
-.answer-card {
-  background-color: #e9dccb;
-  border: 2px solid #8a5a3a;
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-}
-
-.answer-card p {
-  margin: 4px 0 0;
-}
-
-.answer-card.correct {
-  border-left: 8px solid #2e7d32;
-}
-
-.answer-card.incorrect {
-  border-left: 8px solid #b3261e;
 }

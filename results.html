@@ -10,6 +10,8 @@
     <link href="styles/colors.css" rel="stylesheet">
     <link href="styles/results.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Font Awesome: the share icon on the Share results button (same as the profile page) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
@@ -46,13 +48,12 @@
 
             <!-- Copies the score to the clipboard (src/shareResults.js) -->
             <button type="button" id="share-score" class="back-button mb-2" disabled>
-                <i class="fa-solid fa-share me-2" aria-hidden="true"></i>Share my score
+                <i class="fa-solid fa-share me-2" aria-hidden="true"></i>Share results
             </button>
 
-            <a href="history.html" class="back-button mb-2">View Quiz History</a>
-            <a href="main.html" class="back-button">
-                Back to Home
-            </a>
+            <!-- Continue: opens the progress screen (streak + badges).
+                 saveHistory.js waits for this quiz to be saved first. -->
+            <a href="progress.html" id="continue-link" class="back-button">Continue</a>
 
         </section>
 

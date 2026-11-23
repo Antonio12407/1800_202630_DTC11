@@ -27,7 +27,7 @@
     <script type="module" src="/src/components/site-navbar.js"></script>
 </head>
 
-<body>
+<body class="page-centered">
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
@@ -37,12 +37,12 @@
 
     <!-- Main content goes here -->
     <!-- Main content goes here -->
-    <div class="container my-5 py-5" style="max-width: 420px;">
+    <div class="page-content container py-3" style="max-width: 420px;">
         <!-- Alerts -->
         <div id="authAlert" class="alert alert-danger d-none my-5" role="alert"></div>
 
         <!-- Login -->
-        <div id="loginView" class="mt-5 pt-5">
+        <div id="loginView">
             <h3 class="mb-3 text-center" style="color: #6B4226">Login</h3>
             <form id="loginForm" novalidate>
                 <div class="mb-3">
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Signup -->
-        <div id="signupView" class="mt-5 pt-5 d-none">
+        <div id="signupView" class="d-none">
             <h3 class="mb-3 text-center">Sign Up</h3>
             <form id="signupForm" novalidate>
                 <div class="mb-3">

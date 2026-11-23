@@ -1,11 +1,19 @@
 
 import { onAuthReady } from "./authentication.js";
-import { checkDailyQuizLimit } from "./streak.js";
+import { checkDailyQuizLimit, recordQuizCompletion } from "./streak.js";
 import { getTodaysQuizId, getQuiz } from "./quizzes.js";
+import { showAnswerBreakdown } from "./answerBreakdown.js";
 
 // One quiz per day: redirects if today's quiz is already done
 // (or to login if signed out). Uses the saved Firestore date.
-onAuthReady(checkDailyQuizLimit);
+// `userReady` resolves with the logged-in user, needed to save the
+// quiz as completed after the last question.
+const userReady = new Promise(function (resolve) {
+    onAuthReady(function (user) {
+        checkDailyQuizLimit(user);
+        resolve(user);
+    });
+});
 
 async function loadQuiz() {
     const answerButtons = document.querySelectorAll(".answer-button");
@@ -88,9 +96,10 @@ async function loadQuiz() {
             }
         });
 
-        // Move to the next question when an answer is selected.
-        answerButtons.forEach(function (button) {
-            button.addEventListener("click", function () {
+        // When an answer is selected: show the breakdown pop-up (right or
+        // wrong, and why), then move to the next question.
+        answerButtons.forEach(function (button, index) {
+            button.addEventListener("click", async function () {
 
                 // Keep the user's selected answer in the URL.
                 parameters.set(
@@ -98,15 +107,21 @@ async function loadQuiz() {
                     button.textContent.trim()
                 );
 
-                if (parameters.get("review") === "true") {
-                    // Return to review after changing an answer.
-                    parameters.delete("question");
-                    parameters.delete("review");
+                // No double answers while the pop-up is open.
+                answerButtons.forEach(function (other) {
+                    other.disabled = true;
+                });
 
-                    window.location.href =
-                        "review.html?" + parameters.toString();
+                const isLastQuestion = questionNumber >= questions.length;
 
-                } else if (questionNumber < questions.length) {
+                try {
+                    await showAnswerBreakdown(question, letters[index], isLastQuestion);
+                } catch (error) {
+                    // Never block the quiz because the pop-up failed.
+                    console.error("Could not show answer breakdown:", error);
+                }
+
+                if (!isLastQuestion) {
                     // Move to the next question.
                     parameters.set(
                         "question",
@@ -115,14 +130,35 @@ async function loadQuiz() {
 
                     window.location.href =
                         "quiz.html?" + parameters.toString();
+                    return;
+                }
 
-                } else {
-                    // Open the review page after the last question.
+                // Last question: the quiz is complete. Save it (streak and
+                // today's completion date), then go straight to the results.
+                try {
+                    const user = await userReady;
+                    await recordQuizCompletion(user);
+
+                    // Pass the selected answers (answer1, answer2, ...) along
+                    // so the results page can score them and save them to
+                    // quiz history.
                     parameters.delete("question");
-                    parameters.delete("review");
-
                     window.location.href =
-                        "review.html?" + parameters.toString();
+                        "results.html?" + parameters.toString();
+                } catch (error) {
+                    console.error("Could not save quiz completion:", error);
+
+                    // Let the user try again by picking their answer again.
+                    answerButtons.forEach(function (other) {
+                        other.disabled = false;
+                    });
+
+                    const message = "Could not save your progress. Please pick your answer again to retry.";
+                    if (window.Swal) {
+                        window.Swal.fire({ icon: "error", title: "Something went wrong", text: message });
+                    } else {
+                        alert(message);
+                    }
                 }
             });
         });
