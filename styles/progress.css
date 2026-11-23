@@ -1,0 +1,83 @@
+/* Progress screen (progress.html). Badge circles come from badges.css. */
+
+.progress-streak {
+    color: #6b4226;
+}
+
+/* Darker than Bootstrap's grey so it passes WCAG AA on the beige page */
+#progress-streak-note,
+#progress-status {
+    color: #5c4a3d !important;
+}
+
+/* One row per badge: circle on the left, name + progress bar on the right */
+.progress-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+}
+
+.progress-badge + .progress-badge {
+    border-top: 1px solid #e9dccb;
+}
+
+.progress-badge .badge-circle {
+    flex-shrink: 0;
+    margin: 0;
+    width: 3.25rem;
+    height: 3.25rem;
+    font-size: 1.4rem;
+}
+
+.progress-badge-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.progress-badge-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.progress-badge-name {
+    margin: 0;
+    font-weight: 700;
+    color: #3e2415;
+}
+
+.progress-badge-count {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5c4a3d;
+    white-space: nowrap;
+}
+
+.progress-badge.earned .progress-badge-count {
+    color: #1f6b3a;
+}
+
+.progress-badge-description {
+    margin: 0 0 0.4rem;
+    font-size: 0.8rem;
+    color: #5c4a3d;
+}
+
+/* Bar towards the badge */
+.progress-badge .progress {
+    height: 0.6rem;
+    background-color: #e9dccb;
+    border-radius: 999px;
+}
+
+.progress-badge .progress-bar {
+    background-color: #6b4226;
+    border-radius: 999px;
+}
+
+.progress-badge.earned .progress-bar {
+    background-color: #1f6b3a;
+}
