@@ -1,14 +1,12 @@
-// Runs on history-detail.html. Shows one saved quiz and its answers.
-
 import { onAuthReady } from "/src/authentication.js";
-import { getQuizHistory } from "/src/quizHistory.js";
+import { getQuizHistoryEntry } from "/src/quizHistory.js";
+import { getQuiz } from "/src/quizzes.js";
 
 const dateEl = document.getElementById("detail-date");
 const statusEl = document.getElementById("detail-status");
 const listEl = document.getElementById("answer-list");
 
-const parameters = new URLSearchParams(window.location.search);
-const quizId = parameters.get("id");
+const quizId = new URLSearchParams(window.location.search).get("id");
 
 onAuthReady(async function (user) {
   if (!user) {
@@ -17,14 +15,7 @@ onAuthReady(async function (user) {
   }
 
   try {
-    const history = await getQuizHistory(user);
-    let quiz = null;
-
-    for (let i = 0; i < history.length; i++) {
-      if (history[i].id === quizId) {
-        quiz = history[i];
-      }
-    }
+    const quiz = await getQuizHistoryEntry(user, quizId);
 
     if (quiz === null) {
       statusEl.textContent = "Quiz not found.";
@@ -39,11 +30,19 @@ onAuthReady(async function (user) {
       statusEl.textContent += " - Detailed answers were not saved for this quiz.";
     }
 
+    let questions = [];
+    try {
+      questions = (await getQuiz(quiz.quizId)).questions;
+    } catch (error) {
+      console.error("Could not load the original quiz:", error);
+    }
+
     for (let i = 0; i < quiz.answers.length; i++) {
       const answer = quiz.answers[i];
 
       const item = document.createElement("li");
       const title = document.createElement("strong");
+      const questionText = document.createElement("p");
       const yourAnswer = document.createElement("p");
 
       if (answer.isCorrect) {
@@ -54,13 +53,23 @@ onAuthReady(async function (user) {
         title.textContent = "Question " + answer.questionNumber + " - Incorrect";
       }
 
+      questionText.textContent = answer.question;
       yourAnswer.textContent = "Your answer: " + answer.selectedText;
+
       item.appendChild(title);
+      item.appendChild(questionText);
       item.appendChild(yourAnswer);
 
       if (!answer.isCorrect) {
+        const original = questions[answer.questionNumber - 1];
+        let correctText = answer.correctAnswer;
+
+        if (original && original.M_C && original.M_C[answer.correctAnswer]) {
+          correctText = answer.correctAnswer + ". " + original.M_C[answer.correctAnswer];
+        }
+
         const rightAnswer = document.createElement("p");
-        rightAnswer.textContent = "Correct answer: " + answer.correctAnswer;
+        rightAnswer.textContent = "Correct answer: " + correctText;
         item.appendChild(rightAnswer);
       }
 
