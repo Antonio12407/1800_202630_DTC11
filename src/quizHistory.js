@@ -1,7 +1,3 @@
-// src/quizHistory.js
-// Quiz history stored in Firestore (NOT in the browser):
-//   users/{uid}/quizHistory/{YYYY-MM-DD_quizId}
-
 import { db } from "./firebaseConfig.js";
 import {
   collection,
@@ -11,13 +7,13 @@ import {
   getDocs,
   query,
   orderBy,
+  where,
   serverTimestamp,
+  getCountFromServer,
 } from "firebase/firestore";
 import { getTodayDate } from "./streak.js";
 
-// Save one completed quiz. Returns true if saved, false if this
-// quiz was already saved today (the first result is kept).
-export async function saveQuizResult(user, { quizId, score, total }) {
+export async function saveQuizResult(user, { quizId, score, total, answers = [] }) {
   if (!user) {
     throw new Error("Please sign in first.");
   }
@@ -40,6 +36,16 @@ export async function saveQuizResult(user, { quizId, score, total }) {
     score: score,
     total: total,
     percentage: total > 0 ? Math.round((score / total) * 100) : 0,
+    answers: answers.map(function (answer) {
+      return {
+        questionNumber: answer.questionNumber,
+        question: answer.question,
+        selected: answer.selected,
+        selectedText: answer.selectedText,
+        correctAnswer: answer.correctAnswer,
+        isCorrect: answer.isCorrect,
+      };
+    }),
     completedDate: completedDate,
     completedAt: serverTimestamp(),
   });
@@ -47,7 +53,31 @@ export async function saveQuizResult(user, { quizId, score, total }) {
   return true;
 }
 
-// Load the user's history, most recent first.
+export async function getCompletedQuizCount(user) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const snapshot = await getCountFromServer(
+    collection(db, "users", user.uid, "quizHistory")
+  );
+  return snapshot.data().count;
+}
+
+export async function getPerfectQuizCount(user) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const snapshot = await getCountFromServer(
+    query(
+      collection(db, "users", user.uid, "quizHistory"),
+      where("percentage", "==", 100)
+    )
+  );
+  return snapshot.data().count;
+}
+
 export async function getQuizHistory(user) {
   if (!user) {
     throw new Error("Please sign in first.");
@@ -66,8 +96,34 @@ export async function getQuizHistory(user) {
       score: data.score,
       total: data.total,
       percentage: data.percentage,
+      answers: data.answers || [], // older entries were saved without answers
       completedDate: data.completedDate,
       completedAt: data.completedAt ? data.completedAt.toDate() : null,
     };
   });
+}
+
+export async function getQuizHistoryEntry(user, entryId) {
+  if (!user) {
+    throw new Error("Please sign in first.");
+  }
+
+  const entrySnap = await getDoc(
+    doc(db, "users", user.uid, "quizHistory", entryId)
+  );
+
+  if (!entrySnap.exists()) {
+    return null;
+  }
+
+  const data = entrySnap.data();
+  return {
+    id: entrySnap.id,
+    quizId: data.quizId,
+    score: data.score,
+    total: data.total,
+    percentage: data.percentage,
+    answers: data.answers || [],
+    completedDate: data.completedDate,
+  };
 }

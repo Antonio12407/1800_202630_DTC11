@@ -1,11 +1,27 @@
-import { logoutUser } from '/src/authentication.js';   // Our function to log out the user
 import { onAuthReady } from "/src/authentication.js";  // Our function to get authenticated user
+
+// Which navbar tab each page belongs to (page filename without ".html").
+// "" is the site root ("/"), which serves index.html.
+const TAB_FOR_PAGE = {
+    "": "home",
+    "index": "home",
+    "main": "home",
+    "quiz": "home",
+    "results": "home",
+    "progress": "home",
+    "profile": "profile",
+    "history": "profile",
+    "history-detail": "profile",
+    "login": "profile",
+    "settings": "settings",
+};
 
 class SiteNavbar extends HTMLElement {
     constructor() {
         super();
         this.renderNavbar();
-        this.renderAuthControls();
+        this.updateProfileLinks();
+        this.highlightCurrentTab();
     }
 
     renderNavbar() {
@@ -17,23 +33,26 @@ class SiteNavbar extends HTMLElement {
                 <!-- Left side: logo + app name, then Home -->
                 <div class="d-flex align-items-center gap-4">
                     <a class="navbar-brand d-flex align-items-center gap-3 m-0" href="#">
-                        <img src="./images/quaggle-quagga-transparent.png" alt="Quaggle logo" width="80" height="70">
+                        <img src="./images/quagga_logo.png" alt="Quaggle logo" width="80" height="62">
                         <span class="fw-bold"
                             style="font-family: 'Bricolage Grotesque', Helvetica, sans-serif; font-size: 34px; letter-spacing: -1px;">Quaggle</span>
                     </a>
 
-                    <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2 mx-2">
+                    <a href="main.html" data-tab="home" class="text-dark text-decoration-none d-flex align-items-center gap-2 mx-2">
                         <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
-                        <span class="fs-5">Home</span>
+                        <span class="fs-5 nav-label" data-label="Home">Home</span>
                     </a>
                 </div>
 
                 <!-- Right side: Profile and Settings -->
                 <div class="d-flex align-items-center gap-4">
-                    <div id="authControlsDesktop"></div>
+                    <a href="profile.html" data-tab="profile" class="profile-link text-dark text-decoration-none d-flex align-items-center gap-2">
+                        <span class="fs-5 nav-label" data-label="Profile">Profile</span>
+                        <i class="bi bi-person-circle fs-1" aria-hidden="true"></i>
+                    </a>
 
-                    <a href="#" class="text-dark text-decoration-none d-flex align-items-center gap-2">
-                        <span class="fs-5">Settings</span>
+                    <a href="settings.html" data-tab="settings" class="text-dark text-decoration-none d-flex align-items-center gap-2">
+                        <span class="fs-5 nav-label" data-label="Settings">Settings</span>
                         <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -46,14 +65,17 @@ class SiteNavbar extends HTMLElement {
         <nav class="navbar bg-secondary-subtle fixed-bottom d-md-none">
             <div class="container-fluid flex-nowrap gap-3">
 
-                <div class="text-dark text-center flex-fill">
+                <a href="main.html" data-tab="home" class="text-dark text-decoration-none text-center flex-fill">
                     <i class="bi bi-house-fill fs-1" aria-hidden="true"></i>
                     <small class="d-block">Home</small>
-                </div>
+                </a>
 
-                <div id="authControls" class="text-center flex-fill"></div>
+                <a href="profile.html" data-tab="profile" class="profile-link text-dark text-decoration-none text-center flex-fill">
+                    <i class="bi bi-person-circle fs-1" aria-hidden="true"></i>
+                    <small class="d-block">Profile</small>
+                </a>
 
-                <a href="#" class="text-dark text-decoration-none text-center flex-fill">
+                <a href="settings.html" data-tab="settings" class="text-dark text-decoration-none text-center flex-fill">
                     <i class="bi bi-gear-fill fs-1" aria-hidden="true"></i>
                     <small class="d-block">Settings</small>
                 </a>
@@ -65,43 +87,37 @@ class SiteNavbar extends HTMLElement {
     }
 
     /**
-     * Displays Log in or Log out button in the navbar based on Firebase authentication status.
+     * The navbar always shows Profile (there is no Log in / Log out here:
+     * Log in is on the home page, Log out is on the profile page).
+     * When logged out, Profile goes straight to the login page.
      * Updates automatically when the user's login status changes.
      */
-    renderAuthControls() {
-        
-        const authControls = this.querySelector('#authControls');               // mobile
-        const authControlsDesktop = this.querySelector('#authControlsDesktop'); // desktop
+    updateProfileLinks() {
+        const profileLinks = this.querySelectorAll(".profile-link"); // desktop + mobile
 
-        // Pass a callback that runs when Firebase reports the login status
-        onAuthReady(function (user) { // Receives the user object (or null)
+        onAuthReady(function (user) {
+            profileLinks.forEach(function (link) {
+                link.href = user ? "profile.html" : "login.html";
+            });
+        });
+    }
 
-            if (user) { // User is logged in
-                authControls.innerHTML = `<a href="index.html" id="signOutBtn" class="text-dark text-decoration-none d-block">
-                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                        <small class="d-block">Log out</small>
-                    </a>`;
+    /**
+     * Highlights the tab for the current page in both navbars (class
+     * "active" + aria-current="page"). Matches on data-tab, not href,
+     * because the Profile link's href changes when the user is logged out.
+     * Pages not in TAB_FOR_PAGE highlight nothing.
+     */
+    highlightCurrentTab() {
+        const fileName = location.pathname.split("/").pop().toLowerCase();
+        const page = fileName.replace(/\.html$/, "");
+        const tab = TAB_FOR_PAGE[page];
 
-                authControlsDesktop.innerHTML = `<a href="index.html" id="signOutBtnDesktop" class="text-dark text-decoration-none d-flex align-items-center gap-2">
-                        <span class="fs-5">Log out</span>
-                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                    </a>`;
+        if (!tab) return;
 
-                authControls.querySelector('#signOutBtn').addEventListener('click', logoutUser);
-                authControlsDesktop.querySelector('#signOutBtnDesktop').addEventListener('click', logoutUser);
-
-            } else { // User is NOT logged in
-                authControls.innerHTML = `<a href="login.html" class="text-dark text-decoration-none d-block">
-                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                        <small class="d-block">Log in</small>
-                    </a>`;
-
-                authControlsDesktop.innerHTML = `<a href="login.html" class="text-dark text-decoration-none d-flex align-items-center gap-2">
-                        <span class="fs-5">Log in</span>
-                        <i class="bi bi-person-fill fs-1" aria-hidden="true"></i>
-                    </a>`;
-            }
-
+        this.querySelectorAll('a[data-tab="' + tab + '"]').forEach(function (link) {
+            link.classList.add("active");
+            link.setAttribute("aria-current", "page");
         });
     }
 }

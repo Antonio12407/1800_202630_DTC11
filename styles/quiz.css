@@ -1,7 +1,6 @@
 body {
     background-color: #FAF5EE !important;
     color: #3E2415;
-    font-family: Arial, sans-serif;
 }
 
 .quiz-container {
@@ -17,7 +16,7 @@ body {
 
 .question-container {
     background-color: #E9DCCB;
-    padding: 32px !important;
+    padding: 32px 32px 12px !important;
     font-size: 1.15rem;
     line-height: 1.7;
 }
@@ -25,6 +24,44 @@ body {
 .question-container h1 {
     color: #6B4226;
     font-weight: 700;
+}
+
+.quiz-zoom-controls {
+    flex-shrink: 0;
+}
+
+.quiz-zoom-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAF5EE;
+    color: #6B4226;
+    font-size: 1.1rem;
+    border: 2px solid #8A5A3A;
+    border-radius: 10px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.quiz-zoom-btn:hover {
+    background-color: #6B4226;
+    color: #FFFFFF;
+    border-color: #6B4226;
+}
+
+.quiz-zoom-btn:focus-visible {
+    outline: 3px solid #8A5A3A;
+    outline-offset: 3px;
+}
+
+
+
+.quiz-zoom-label {
+    min-width: 48px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B4226;
 }
 
 .image-placeholder {
@@ -38,7 +75,7 @@ body {
     border-radius: 16px;
 }
 
-.quiz-container > section:last-child {
+.quiz-container>section:last-child {
     background-color: #FAF5EE !important;
     padding: 28px !important;
 }
@@ -79,7 +116,8 @@ body {
 }
 
 .progress {
-    height: 18px;
+    height: 24px;
+    border: 2px solid #8A5A3A;
     border-radius: 20px;
     background-color: #E9DCCB;
 }
@@ -90,10 +128,15 @@ body {
 }
 
 @media (max-width: 575.98px) {
+
+    /* Phones: fill the whole screen edge to edge, no card frame. */
     .quiz-container {
-        width: calc(100% - 24px);
-        margin: 16px auto;
-        border-radius: 16px;
+        width: 100%;
+        max-width: none;
+        margin: 0 !important;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none !important;
     }
 
     .question-container {
@@ -105,18 +148,36 @@ body {
         font-size: 1.8rem;
     }
 
+    .quiz-zoom-btn {
+        width: 34px;
+        height: 34px;
+    }
+
     .image-placeholder {
         margin: 0 0 12px 14px;
         border-radius: 12px;
     }
 
-    .quiz-container > section:last-child {
+    .quiz-container>section:last-child {
         padding: 20px !important;
     }
+
+
 
     .answer-button {
         min-height: 65px;
         padding: 12px;
         font-size: 1.05rem;
+    }
+}
+
+body {
+    padding-top: 105px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 0;
+        padding-bottom: 120px;
     }
 }
