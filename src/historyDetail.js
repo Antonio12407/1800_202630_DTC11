@@ -22,7 +22,13 @@ onAuthReady(async function (user) {
       return;
     }
 
-    dateEl.textContent = quiz.completedDate;
+    // "2026-11-24" -> "November 24, 2026" (same format as the home page)
+    const [year, month, day] = quiz.completedDate.split("-").map(Number);
+    dateEl.textContent = new Date(year, month - 1, day).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
     statusEl.textContent =
       quiz.score + " / " + quiz.total + " correct (" + quiz.percentage + "%)";
 
