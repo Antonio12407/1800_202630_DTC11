@@ -1,3 +1,20 @@
+/* App font: Apple's San Francisco via the system font stack.
+   SF can't be hosted on a website (Apple's licence), but
+   -apple-system / BlinkMacSystemFont show the real San Francisco on
+   iPhone, iPad and Mac. Other devices use their own system font
+   (Segoe UI on Windows, Roboto on Android).
+   `html:root` / `html body` are slightly stronger than Bootstrap's own
+   rules, because some pages load Bootstrap's CSS again from JS. */
+html:root {
+    --app-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+        system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bs-body-font-family: var(--app-font);
+}
+
+html body {
+    font-family: var(--app-font);
+}
+
 body {
     background-color: #FAF5EE;
     color: #3E2415;
