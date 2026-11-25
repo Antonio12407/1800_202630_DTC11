@@ -6,9 +6,8 @@ const TAB_FOR_PAGE = {
     "": "home",
     "index": "home",
     "main": "home",
-    "quiz": "home",
-    "results": "home",
-    "progress": "home",
+    // The quiz flow (quiz, results, progress) isn't a navbar tab, so no
+    // tab is highlighted there.
     "profile": "profile",
     "history": "profile",
     "history-detail": "profile",
