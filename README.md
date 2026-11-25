@@ -95,8 +95,7 @@ Once the application is running:
 │   ├── history.css
 │   ├── progress.css
 │   ├── quiz.css
-│   ├── results.css
-│   └── style.css
+│   └── results.css
 ├── images/
 ├── history.html
 ├── history-detail.html
@@ -108,7 +107,6 @@ Once the application is running:
 ├── quiz.html
 ├── results.html
 ├── settings.html
-├── skeleton.html
 ├── package-lock.json
 ├── package.json
 └── README.md
