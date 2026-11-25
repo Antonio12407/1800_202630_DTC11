@@ -169,4 +169,11 @@ body.page-centered > .page-content {
     --bs-btn-active-color: #fff;
     --bs-btn-active-bg: #6B4226;
     --bs-btn-active-border-color: #6B4226;
+    /* Disabled (e.g. Save in Settings before Edit): the same light
+       beige-brown look as the quiz history cards, instead of
+       Bootstrap's default green */
+    --bs-btn-disabled-color: #3E2415;
+    --bs-btn-disabled-bg: #E9DCCB;
+    --bs-btn-disabled-border-color: #8A5A3A;
+    --bs-btn-disabled-opacity: 1;
 }
