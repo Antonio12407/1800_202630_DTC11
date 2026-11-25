@@ -18,9 +18,15 @@ function formatDate(entry) {
   return entry.completedDate; // fallback: YYYY-MM-DD
 }
 
+// One quiz in the list. Each entry is a real link to its breakdown, so
+// it can be tapped, clicked, or opened with the keyboard, and it shows
+// a "View breakdown" label and a chevron so people know it opens.
 function renderEntry(entry) {
   const item = document.createElement("li");
-  item.className = "history-item";
+
+  const link = document.createElement("a");
+  link.className = "history-item";
+  link.href = "history-detail.html?id=" + encodeURIComponent(entry.id);
 
   const info = document.createElement("div");
   const date = document.createElement("div");
@@ -29,13 +35,25 @@ function renderEntry(entry) {
   const score = document.createElement("div");
   score.className = "history-score";
   score.textContent = entry.score + " / " + entry.total + " correct";
-  info.append(date, score);
+  const cta = document.createElement("div");
+  cta.className = "history-cta";
+  cta.textContent = "View breakdown";
+  info.append(date, score, cta);
+
+  const side = document.createElement("div");
+  side.className = "history-side";
 
   const badge = document.createElement("span");
   badge.className = "history-percent";
   badge.textContent = entry.percentage + "%";
 
-  item.append(info, badge);
+  const chevron = document.createElement("i");
+  chevron.className = "bi bi-chevron-right history-chevron";
+  chevron.setAttribute("aria-hidden", "true");
+
+  side.append(badge, chevron);
+  link.append(info, side);
+  item.appendChild(link);
   return item;
 }
 

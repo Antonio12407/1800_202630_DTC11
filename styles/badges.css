@@ -1,0 +1,61 @@
+.badge-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-circle {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+}
+
+.badge-item.earned .badge-circle {
+    background-color: #6B4226;
+    color: #FAF5EE;
+}
+
+.badge-item.locked .badge-circle {
+    background-color: #E9DCCB;
+    color: #8A5A3A;
+    border: 2px dashed #8A5A3A;
+}
+
+.badge-name,
+.badge-description,
+.badge-status {
+    margin: 0;
+    line-height: 1.25;
+}
+
+.badge-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #3E2415;
+}
+
+.badge-description {
+    font-size: 0.8rem;
+    color: #5c4a3d;
+}
+
+.badge-status {
+    margin-top: auto;
+    padding-top: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-item.earned .badge-status {
+    color: #1f6b3a;
+}
+
+.badge-item.locked .badge-status,
+.badge-item.locked .badge-name {
+    color: #5c4a3d;
+}

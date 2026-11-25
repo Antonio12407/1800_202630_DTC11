@@ -1,3 +1,20 @@
+/* App font: Apple's San Francisco via the system font stack.
+   SF can't be hosted on a website (Apple's licence), but
+   -apple-system / BlinkMacSystemFont show the real San Francisco on
+   iPhone, iPad and Mac. Other devices use their own system font
+   (Segoe UI on Windows, Roboto on Android).
+   `html:root` / `html body` are slightly stronger than Bootstrap's own
+   rules, because some pages load Bootstrap's CSS again from JS. */
+html:root {
+    --app-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+        system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bs-body-font-family: var(--app-font);
+}
+
+html body {
+    font-family: var(--app-font);
+}
+
 body {
     background-color: #FAF5EE;
     color: #3E2415;
@@ -14,12 +31,131 @@ body {
     color: #6B4226 !important;
 }
 
+/* Bottom navbar: give Home / Profile / Settings equal widths so the
+   middle item (Profile) sits exactly in the center. Bootstrap's
+   flex-fill sizes items by their label, and "Settings" is the widest.
+   (!important is needed because Bootstrap's .flex-fill uses it.) */
+.navbar.fixed-bottom .container-fluid > * {
+    flex: 1 1 0 !important;
+    min-width: 0;
+}
+
+/* -------------------------------------------------------------
+   Navbar tabs use the same colours as the app's main buttons
+   (.btn-outline-success above):
+   - current page (site-navbar.js adds .active): dark brown fill,
+     white icon and label, like a primary button
+   - hover / keyboard focus: the button hover look, a #8A5A3A outline
+     with dark brown text on the beige
+   Every tab always has the same padding and corners, and the outline
+   is an inset shadow, so nothing moves when a tab is highlighted.
+   ------------------------------------------------------------- */
+.navbar a[data-tab] {
+    border-radius: 14px;
+    padding: 0.25rem 0.75rem;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+}
+
+/* Hover only on devices with a real pointer, so a tap on a phone
+   doesn't leave a "stuck" highlight. */
+@media (hover: hover) {
+    .navbar a[data-tab]:not(.active):hover {
+        box-shadow: inset 0 0 0 2px #8A5A3A;
+        color: #3E2415 !important;
+    }
+}
+
+.navbar a[data-tab]:not(.active):focus-visible {
+    box-shadow: inset 0 0 0 2px #8A5A3A;
+    color: #3E2415 !important;
+    outline: 3px solid #8A5A3A;
+    outline-offset: 2px;
+}
+
+/* Desktop labels reserve their bold width (an invisible bold copy of
+   the text from data-label), so bolding the active label doesn't
+   widen it and nudge the other items. */
+.navbar .nav-label {
+    display: inline-grid;
+}
+
+.navbar .nav-label::after {
+    content: attr(data-label);
+    grid-area: 1 / 1;
+    font-weight: 700;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+/* Active tab (both navbars): dark brown fill, white icon, bold white
+   label, like the app's primary buttons */
+.navbar a.active {
+    color: #FFFFFF !important;
+    background-color: #3E2415;
+    box-shadow: none;
+}
+
+.navbar a.active .nav-label,
+.navbar.fixed-bottom a.active small {
+    font-weight: 700;
+}
+
 p.fs-5 {
     color: #6B4226 !important;
 }
 
 h1.text-body-emphasis {
     color: #6B4226 !important;
+}
+
+/* -------------------------------------------------------------
+   Vertically centered pages (home, dashboard, profile, login)
+   <body class="page-centered"> + the content element gets "page-content".
+   The content sits in the middle of the space between the navbars.
+   Auto margins (not flex centering) are used on purpose: if the content
+   is taller than the screen it starts at the top and scrolls, instead
+   of being cut off at the top.
+   ------------------------------------------------------------- */
+body.page-centered {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;           /* phones: the real visible height */
+    padding-top: 1.5rem;
+    padding-bottom: 6rem;         /* room for the fixed bottom navbar */
+}
+
+body.page-centered > .page-content {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+}
+
+@media (min-width: 768px) {
+    body.page-centered {
+        padding-top: 6.5rem;      /* room for the fixed top navbar */
+        padding-bottom: 1.5rem;
+    }
+}
+
+/* Home and dashboard on phones (e.g. iPhone 16): slightly smaller
+   zebra, date and description so everything fits on one screen. */
+@media (max-width: 575.98px) {
+    .home-mascot {
+        width: min(200px, 55vw);
+    }
+
+    body.page-centered #formatted-date {
+        font-size: 1.6rem;
+    }
+
+    .home-card {
+        padding: 1rem !important;
+    }
+
+    .home-card p {
+        font-size: 1rem !important;
+    }
 }
 
 /* change color variable */
